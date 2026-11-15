@@ -1,0 +1,1148 @@
+<!doctype html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Belle · Estúdio de unhas</title>
+
+<meta name="description" content="Esmaltação, alongamento e nail art com hora marcada. Agende seu horário na Belle.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="preload" href="assets/3d/esmalte-mao.glb" as="fetch" type="model/gltf-binary" crossorigin>
+
+<link rel="stylesheet" href="assets/hero3d/hero3d.css?v=2">
+
+<style>
+
+  :root{
+
+    --texto:#414141;
+
+    --vinho:#4A0E1B;          /* botões escuros e acentos */
+
+    --vinho-2:#6B1A2B;
+
+    --bege:#F0EBE5;           /* faixas bege e rodapé */
+
+    --linha:#E3DED8;
+
+    --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+
+    --sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+    --lado:clamp(16px,2.6vw,40px);
+
+  }
+
+  *{box-sizing:border-box}
+
+  html{scroll-behavior:smooth}
+
+  body{margin:0;background:#fff;color:var(--texto);font-family:var(--serif);font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased}
+
+  img{display:block;max-width:100%}
+
+  a{color:inherit;text-decoration:none}
+
+  h1,h2,h3,p,ul{margin:0}
+
+  ul{padding:0;list-style:none}
+
+  button{font:inherit;cursor:pointer}
+
+  .caps{font-family:var(--sans);text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:500}
+
+  /* ===== botões ===== */
+
+  .btn{display:inline-block;padding:.95rem 1.7rem;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--vinho);color:var(--vinho);background:transparent;transition:background .25s,color .25s}
+
+  .btn:hover{background:var(--vinho);color:#fff}
+
+  .btn--cheio{background:var(--vinho);color:#fff}
+
+  .btn--cheio:hover{background:var(--vinho-2);border-color:var(--vinho-2)}
+
+  .btn--claro{border-color:#fff;color:#fff}
+
+  .btn--claro:hover{background:#fff;color:var(--vinho)}
+
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--vinho);outline-offset:3px}
+
+  /* ===== barra de aviso ===== */
+
+  .aviso{background:#101010;color:#fff;text-align:center;padding:.8rem 1rem;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+
+  /* ===== cabeçalho fixo ===== */
+
+  .topo{position:sticky;top:0;z-index:60;background:#fff;transition:box-shadow .3s}
+
+  .topo.sombra{box-shadow:0 1px 0 var(--linha)}
+
+  .topo__in{display:flex;align-items:center;gap:clamp(1.4rem,3vw,3rem);padding:1.15rem var(--lado);min-height:106px}
+
+  .logo{display:grid;grid-template-columns:repeat(3,10px);grid-template-rows:repeat(3,15px);gap:0 7px;font-family:var(--sans);font-size:11px;letter-spacing:.1em;font-weight:500;color:#222;margin-left:.5rem;margin-right:.6rem}
+
+  .logo span{display:grid;place-items:center}
+
+  .logo .a{grid-area:1/1}.logo .b{grid-area:1/3}.logo .c{grid-area:2/2}.logo .d{grid-area:3/1}.logo .e{grid-area:3/3}
+
+  .menu{display:flex;align-items:center;gap:clamp(1.2rem,2vw,2rem)}
+
+  .menu > li{position:relative}
+
+  .menu a,.menu button.t{font-family:var(--sans);font-size:11.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#222;background:none;border:0;padding:.6rem 0;display:inline-flex;align-items:center;gap:.5rem}
+
+  .menu a:hover,.menu button.t:hover{color:var(--vinho)}
+
+  .menu .seta{width:9px;height:6px;transition:transform .25s}
+
+  .menu li:hover .seta,.menu li:focus-within .seta{transform:rotate(180deg)}
+
+  .sub{position:absolute;left:-1rem;top:100%;min-width:13rem;background:#fff;border:1px solid var(--linha);padding:.6rem 0;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .2s,transform .2s,visibility .2s}
+
+  .menu li:hover .sub,.menu li:focus-within .sub{opacity:1;visibility:visible;transform:none}
+
+  .sub a{display:block;padding:.6rem 1.2rem;font-size:11px}
+
+  .acoes{margin-left:auto;display:flex;align-items:center;gap:1.4rem}
+
+  .acoes .btn{padding:1.05rem 2.2rem;color:#333;border-color:#333}
+
+  .acoes .btn:hover{color:#fff;background:#333}
+
+  .icone{background:none;border:0;padding:.3rem;color:#222;display:grid;place-items:center}
+
+  .icone svg{width:23px;height:23px}
+
+  .burger{display:none}
+
+  /* ===== banner de seção (antiga hero em slides) ===== */
+
+  .banner{position:relative;height:min(64vh,640px);min-height:420px;overflow:hidden;background:#d9cdbf}
+
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity 1.1s ease,visibility 1.1s}
+
+  .slide.on{opacity:1;visibility:visible}
+
+  .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  .slide__txt{position:absolute;z-index:2;left:max(var(--lado),6vw);top:50%;transform:translateY(-50%);max-width:30rem}
+
+  .slide h1,.slide h2{font-weight:400;font-size:clamp(2.6rem,4.6vw,4.6rem);line-height:1.02;letter-spacing:-.01em}
+
+  .slide p{margin:1.1rem 0 1.8rem;font-style:italic;font-size:1.25rem}
+
+  .slide--escuro{color:var(--vinho)}
+
+  .slide--claro{color:#fff}
+
+  .slide--claro::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,5,10,.35),rgba(25,5,10,0) 60%)}
+
+  .slide--claro .slide__txt{z-index:3}
+
+  .pausa{position:absolute;z-index:5;left:var(--lado);bottom:1.4rem;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.9);background:rgba(20,10,10,.35);color:#fff;display:grid;place-items:center}
+
+  .pausa svg{width:14px;height:14px}
+
+  .pausa .ic-play{display:none}.pausa.parado .ic-play{display:block}.pausa.parado .ic-pause{display:none}
+
+  /* ===== 4 cards de elementos (vídeos em fundo branco) ===== */
+
+  .elementos{padding:clamp(3.8rem,7vw,6.2rem) var(--lado) clamp(1rem,3vw,2rem);background:#fff}
+
+  .elementos__topo{text-align:center;max-width:38rem;margin:0 auto clamp(2.2rem,4.5vw,3.6rem)}
+
+  .elementos__topo .caps{color:var(--vinho);display:block;margin-bottom:.6rem}
+
+  .elementos__sub{margin-top:.7rem;font-style:italic;font-size:1.18rem;color:#5a5a5a}
+
+  .elementos__grade{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1rem,1.6vw,1.6rem)}
+
+  .elem-card{background:#fff;border:1px solid var(--linha);padding:1.35rem 1.35rem 1.6rem;display:flex;flex-direction:column;text-align:center;transition:border-color .3s ease,box-shadow .3s ease,transform .3s ease}
+
+  .elem-card:hover{border-color:#cbbab2;box-shadow:0 16px 36px rgba(74,14,27,.06);transform:translateY(-3px)}
+
+  .elem-card__topo{display:flex;justify-content:center;align-items:center;text-align:center;font-family:var(--sans);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#767676;padding-bottom:.75rem;border-bottom:1px solid #f2eeea}
+
+  .elem-card__midia{position:relative;aspect-ratio:1/1;width:100%;background:#fff;overflow:hidden;margin:.4rem 0 .8rem;display:grid;place-items:center}
+
+  .elem-card__midia video{width:100%;height:100%;object-fit:contain;background:#fff;display:block;mix-blend-mode:multiply;transform: translate(var(--dx,0%), var(--dy,0%)) scale(var(--escala,1));transition:transform .6s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+
+  .elem-card:hover .elem-card__midia video{transform:translate(var(--dx,0%), var(--dy,0%)) scale(calc(var(--escala,1) * 1.04))}
+
+  .elem-card h3{margin-top:.3rem;font-style:italic;font-weight:400;font-size:1.6rem;line-height:1.15;color:#2b2b2b}
+
+  .elem-card p{margin-top:.55rem;font-family:var(--sans);font-size:12px;line-height:1.55;color:#5a5a5a}
+
+  /* ===== explore ===== */
+
+  .titulo{text-align:center;font-weight:400;font-size:clamp(2rem,2.8vw,2.6rem);letter-spacing:-.01em;color:#3a3a3a}
+
+  .explore{padding:clamp(4rem,8vw,7rem) var(--lado) clamp(4rem,8vw,6.5rem)}
+
+  .cartoes{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,1.5vw,1.5rem);margin-top:clamp(2.2rem,5vw,4.2rem)}
+
+  .cartao{display:block;text-align:center}
+
+  .cartao__img{position:relative;aspect-ratio:1;overflow:hidden;background:#eee5dc}
+
+  .cartao__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s ease,transform .8s ease}
+
+  .cartao__img .h{opacity:0}
+
+  .cartao:hover .cartao__img .h{opacity:1}
+
+  .cartao:not(.tem-hover):hover .cartao__img img{transform:scale(1.04)}
+
+  .cartao h3{margin-top:1.5rem;font-style:italic;font-weight:400;font-size:1.65rem;color:#333}
+
+  .cartao p{margin-top:.5rem;font-family:var(--sans);font-size:12px;color:#555}
+
+  .ver-todos{display:block;width:max-content;margin:3rem auto 0;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:.3rem}
+
+  /* ===== o que esperar (carrossel) ===== */
+
+  .esperar{padding:0 var(--lado) clamp(4rem,8vw,6rem)}
+
+  .esperar .titulo{font-size:1.4rem}
+
+  .car{position:relative;margin-top:2rem;padding-inline:clamp(2.2rem,5vw,4.5rem)}
+
+  .car__trilho{display:flex;gap:1.6rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;scroll-behavior:smooth}
+
+  .car__trilho::-webkit-scrollbar{display:none}
+
+  .card{flex:0 0 calc((100% - 3.2rem) / 3);scroll-snap-align:start;border:1px solid var(--linha);padding:1.6rem 1.6rem 1.4rem;display:flex;flex-direction:column;min-height:15rem}
+
+  .card .cap{font-family:var(--sans);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6d6d6d}
+
+  .card h3{margin-top:.9rem;font-weight:500;font-size:1.45rem;line-height:1.15;color:#333}
+
+  .card p{margin-top:.8rem;font-size:1.02rem;line-height:1.5}
+
+  .card .rodape-card{margin-top:auto;padding-top:1.4rem;font-family:var(--sans);font-size:11px;letter-spacing:.1em;color:#6d6d6d}
+
+  .setaC{position:absolute;top:50%;margin-top:-12px;width:28px;height:28px;border:0;background:none;color:#333;display:grid;place-items:center}
+
+  .setaC.ant{left:0}.setaC.prox{right:0}
+
+  .setaC svg{width:12px;height:18px}
+
+  /* ===== faixa de serviços ===== */
+
+  .faixa{padding:clamp(2rem,5vw,3.5rem) var(--lado) clamp(3rem,6vw,5rem);text-align:center}
+
+  .faixa .titulo{font-size:1.9rem;margin-bottom:2.4rem}
+
+  .faixa ul{display:flex;justify-content:center;align-items:center;gap:clamp(1.6rem,5vw,4.6rem);flex-wrap:wrap}
+
+  .faixa li{font-size:clamp(1.6rem,2.8vw,2.7rem);color:#4a4a4a;letter-spacing:.02em}
+
+  .faixa li:nth-child(2){font-style:italic}.faixa li:nth-child(3){text-transform:uppercase;letter-spacing:.16em;font-size:clamp(1.3rem,2.2vw,2.1rem)}
+
+  .faixa li:nth-child(4){font-weight:600}
+
+  /* ===== dois blocos ===== */
+
+  .duplo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.9rem,1.6vw,1.6rem);padding:0 var(--lado)}
+
+  .bloco{position:relative;aspect-ratio:1/1.1;overflow:hidden;color:#fff;background:#6b2a30}
+
+  .bloco img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  .bloco::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(25,5,10,.62),rgba(25,5,10,0) 58%)}
+
+  .bloco__txt{position:absolute;z-index:2;left:0;right:0;bottom:11%;text-align:center;padding:0 1.5rem}
+
+  .bloco .caps{font-size:10.5px}
+
+  .bloco h2{margin:.5rem 0 .4rem;font-weight:400;font-size:clamp(2rem,3.1vw,3rem);line-height:1.08}
+
+  .bloco p{font-style:italic;font-size:1.1rem;margin-bottom:1.5rem}
+
+  /* ===== faixas bege ===== */
+
+  .bege{background:var(--bege)}
+
+  .metade{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(1.6rem,5vw,5rem);padding:clamp(3.5rem,7vw,6rem) var(--lado);margin-top:clamp(3rem,6vw,5rem)}
+
+  .metade__txt{max-width:30rem;justify-self:center;text-align:center}
+
+  .metade__txt .caps{color:#555}
+
+  .metade__txt h2{margin:1.2rem 0 1.8rem;font-weight:400;font-size:clamp(2rem,3vw,2.8rem);line-height:1.15;color:#3a3a3a}
+
+  .metade__img{aspect-ratio:1/1.1;max-height:560px;justify-self:center;width:min(100%,520px);overflow:hidden}
+
+  .metade__img img{width:100%;height:100%;object-fit:cover}
+
+  .metade.inv .metade__img{order:-1}
+
+  .metade.sem-topo{margin-top:0}
+
+  /* ===== newsletter ===== */
+
+  .news{padding:clamp(3.5rem,7vw,5.5rem) var(--lado);text-align:center}
+
+  .news h2{font-weight:400;font-size:1.9rem;color:#3a3a3a}
+
+  .news p{margin:1rem auto 1.8rem;max-width:42rem;font-size:1rem}
+
+  .news form{display:inline-flex;align-items:stretch;gap:0}
+
+  .news input{width:clamp(150px,18vw,230px);padding:.8rem .2rem;border:0;border-bottom:1px solid #ccc;font-family:var(--serif);font-size:1rem;background:transparent;color:#333}
+
+  .news .btn{padding:.95rem 1.7rem;color:#fff;background:var(--vinho)}
+
+  .status{min-height:1.4em;margin-top:.9rem;font-family:var(--sans);font-size:12px;color:#6a6a6a}
+
+  /* ===== rodapé ===== */
+
+  .rodape{background:var(--bege);padding:clamp(3rem,6vw,5rem) var(--lado) 2rem}
+
+  .rodape__cols{display:grid;grid-template-columns:repeat(3,1fr);max-width:62rem;margin:0 auto}
+
+  .col{text-align:center;padding:0 1.4rem}
+
+  .col + .col{border-left:1px solid #9a9a9a}
+
+  .col h4{margin:0 0 1.4rem;font-family:var(--sans);font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#767676}
+
+  .col a{display:block;padding:.35rem 0;font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#222}
+
+  .col a:hover{color:var(--vinho)}
+
+  .rodape small{display:block;margin-top:3.4rem;text-align:center;font-family:var(--sans);font-size:11px;color:#6d6d6d}
+
+  /* ===== gaveta (celular) ===== */
+
+  .gaveta{position:fixed;inset:0 0 0 auto;width:min(86vw,360px);background:#fff;z-index:80;transform:translateX(100%);transition:transform .35s ease;padding:1.4rem 1.6rem;overflow:auto;box-shadow:-10px 0 30px rgba(0,0,0,.15)}
+
+  .gaveta.aberta{transform:none}
+
+  .gaveta button.fechar{background:none;border:0;font-size:1.8rem;float:right;color:#222}
+
+  .gaveta ul{clear:both;margin-top:1.2rem}
+
+  .gaveta li a{display:block;padding:1rem 0;border-bottom:1px solid var(--linha);font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+
+  .veu{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:70;opacity:0;visibility:hidden;transition:opacity .3s}
+
+  .veu.on{opacity:1;visibility:visible}
+
+  /* ===== revelação suave ===== */
+
+  .rv{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease}
+
+  .rv.in{opacity:1;transform:none}
+
+  @media (max-width:1100px){
+
+    .menu,.acoes .btn{display:none}
+
+    .burger{display:grid}
+
+    .topo__in{min-height:80px}
+
+    .elementos__grade,.cartoes{grid-template-columns:repeat(2,1fr)}
+
+    .card{flex-basis:calc((100% - 1.6rem) / 2)}
+
+  }
+
+  @media (max-width:760px){
+
+    .elementos__grade,.duplo,.metade{grid-template-columns:1fr}
+
+    .metade.inv .metade__img{order:0}
+
+    .card{flex-basis:100%}
+
+    .rodape__cols{grid-template-columns:1fr;gap:2rem}
+
+    .col + .col{border-left:0;border-top:1px solid #9a9a9a;padding-top:2rem}
+
+    .slide__txt{top:auto;bottom:12%;transform:none;right:var(--lado)}
+
+    .slide--escuro .slide__txt{background:rgba(255,255,255,.5);padding:1rem;left:var(--lado)}
+
+    .news form{display:flex;flex-direction:column;gap:.8rem;align-items:center}
+
+  }
+
+  @media (prefers-reduced-motion:reduce){
+
+    html{scroll-behavior:auto}
+
+    .slide,.cartao__img img,.rv,.car__trilho{transition:none}
+
+    .rv{opacity:1;transform:none}
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="aviso">Atendimento com hora marcada</div>
+
+<header class="topo" id="topo">
+
+  <div class="topo__in">
+
+    <a class="logo" href="#inicio" aria-label="Belle, início">
+
+      <span class="a">B</span><span class="b">E</span><span class="c">L</span><span class="d">L</span><span class="e">E</span>
+
+    </a>
+
+    <ul class="menu" aria-label="Principal">
+
+      <li>
+
+        <button class="t" aria-haspopup="true">Serviços
+
+          <svg class="seta" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1"/></svg></button>
+
+        <div class="sub"><a href="#servicos">Esmaltação</a><a href="#servicos">Alongamento</a><a href="#servicos">Nail art</a><a href="#esperar">Cuidados</a></div>
+
+      </li>
+
+      <li>
+
+        <button class="t" aria-haspopup="true">Cores
+
+          <svg class="seta" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1"/></svg></button>
+
+        <div class="sub"><a href="#servicos">Nude perolado</a><a href="#servicos">Vinho</a><a href="#servicos">Francesinha</a></div>
+
+      </li>
+
+      <li><a href="#servicos">Galeria</a></li>
+
+      <li><a href="#estudio">Estúdio</a></li>
+
+      <li><a href="#contato">Contato</a></li>
+
+    </ul>
+
+    <div class="acoes">
+
+      <a class="btn" href="#agendar">Agendar horário</a>
+
+      <button class="icone" aria-label="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="10.5" cy="10.5" r="6.8"/><path d="M15.5 15.5L21 21"/></svg></button>
+
+      <button class="icone burger" id="abre" aria-label="Abrir menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 7h18M3 12h18M3 17h18"/></svg></button>
+
+    </div>
+
+  </div>
+
+</header>
+
+<main id="inicio">
+
+  <!-- 1 · hero 3D: mão + fileira de esmaltes (assets/hero3d) -->
+
+  <section class="h3d" id="hero3d" aria-label="Escolha sua cor">
+
+    <canvas class="h3d__cena" aria-hidden="true"></canvas>
+
+    <!-- etiqueta presa ao frasco "Sua cor" (posição calculada pela cena) -->
+
+    <button class="h3d__sua" type="button" data-sua>Sua cor<small>crie qualquer tom</small></button>
+
+    <!-- etapa 1: escolher a cor -->
+
+    <div class="h3d__info">
+
+      <h1 class="h3d__marca">Belle · Esmaltação</h1>
+
+      <p class="h3d__nome" data-nome aria-live="polite">Framboesa</p>
+
+      <p class="h3d__desc" data-desc>Rosa profundo, entre o pink e o vinho. A cor da estação.</p>
+
+      <div class="h3d__amostras" role="radiogroup" aria-label="Cores de esmalte"></div>
+
+      <div class="h3d__controle" data-controle></div>
+      <!-- biblioteca de modelos logo abaixo das tonalidades: leva para a mão (vista de cima) e abre a biblioteca -->
+      <button class="h3d__lib-inicio" type="button" data-modelos-inicio aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Biblioteca de modelos</span><small data-modelos-total>16 modelos</small>
+      </button>
+
+      <div class="h3d__acoes">
+
+        <button class="h3d__btn h3d__btn--cheio" type="button" data-escolher>Escolher cor →</button>
+
+        <a class="h3d__btn" href="#agendar">Agendar</a>
+
+      </div>
+
+      <p class="h3d__dica">Toque em um frasco ou crie a sua cor no frasco da esquerda</p>
+
+    </div>
+
+    <!-- etapa 2: girar a mão para a direita e para a esquerda (arrastar na mão também gira) -->
+
+    <div class="h3d__giro" data-giro role="group" aria-label="Girar a mão">
+
+      <button class="h3d__seta" type="button" data-giro-esq aria-label="Girar a mão para a esquerda" title="Girar para a esquerda">‹</button>
+
+      <label class="h3d__giro-faixa"><span>Girar</span><input type="range" min="-85" max="85" step="1" value="0" data-giro-faixa aria-label="Girar a mão da esquerda para a direita"></label>
+
+      <button class="h3d__seta" type="button" data-giro-dir aria-label="Girar a mão para a direita" title="Girar para a direita">›</button>
+
+      <button class="h3d__link" type="button" data-giro-zero>centralizar</button>
+
+    </div>
+
+    <!-- etapa 2: a mão + detalhe ou desenho na unha -->
+
+    <div class="h3d__arte" data-arte aria-hidden="true" role="region" aria-label="Acabamento das unhas">
+
+      <button class="h3d__alca" type="button" data-recolher aria-expanded="true"><span>Ver a mão</span></button>
+
+      <div class="h3d__arte-topo">
+
+        <span class="h3d__chip" aria-hidden="true"></span>
+
+        <div><span class="h3d__marca">Sua escolha</span><strong class="h3d__nome2" data-nome2>Framboesa</strong></div>
+
+      </div>
+
+      <div class="h3d__servicos" data-servicos></div>
+
+      <p class="h3d__rotulo">Unha</p>
+
+      <div class="h3d__unhas" role="radiogroup" aria-label="Qual unha personalizar" data-unhas></div>
+
+      <p class="h3d__dica">Toque numa unha na mão para chegar perto e editar só ela.</p>
+
+      <!-- 1 · Destaque de salão: 10 Modelos Modulares -->
+      <button class="h3d__foto-abrir h3d__galeria-abrir" type="button" data-modelos-abrir aria-haspopup="dialog">
+        <svg class="h3d__galeria-icone" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <div class="h3d__galeria-texto">
+          <div class="h3d__galeria-topo">
+            <strong>Biblioteca de modelos</strong>
+            <span class="h3d__tag-destaque" data-modelos-total>16 modelos</span>
+          </div>
+          <span>Francesinhas, degradês e decorações que se adaptam à cor.</span>
+        </div>
+      </button>
+
+      <!-- 2 · Envio de fotos (Copiar de foto + Modelo IA) -->
+      <div class="h3d__bloco-fotos">
+        <button class="h3d__btn-foto-mini" type="button" data-foto-abrir>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <div class="h3d__btn-foto-txt">
+            <strong>Copiar de foto</strong>
+            <span>Envie foto da unha</span>
+          </div>
+        </button>
+
+        <button class="h3d__btn-foto-mini h3d__ia-abrir" type="button" data-ia-abrir>
+          <svg class="h3d__ia-icone-mini" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 8.5a2 2 0 0 1 2-2h1.6l1.3-1.8h4.2l1.3 1.8H15a2 2 0 0 1 2 2V16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <circle cx="10" cy="12.2" r="2.7"/>
+            <path d="M19.5 2.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>
+          </svg>
+          <div class="h3d__btn-foto-txt">
+            <strong data-ia-texto>Modelo IA</strong>
+            <span>5 unhas do cliente</span>
+          </div>
+        </button>
+      </div>
+
+      <p class="h3d__rotulo">Decoração <span class="h3d__alvo" data-alvo>· todas as unhas</span></p>
+
+      <div class="h3d__seg" role="radiogroup" aria-label="Acabamento">
+
+        <button type="button" role="radio" data-acab="cor">Só cor</button>
+
+        <button type="button" role="radio" data-acab="detalhe">Detalhe</button>
+
+        <button type="button" role="radio" data-acab="desenho">Desenho</button>
+
+      </div>
+
+      <div class="h3d__ref" data-ref hidden>
+
+        <p class="h3d__rotulo">Modelos prontos</p>
+
+        <div class="h3d__modelos" data-modelos></div>
+
+        <p class="h3d__rotulo">Ou envie sua referência</p>
+
+        <div class="h3d__envio">
+
+          <label class="h3d__upload">
+
+            <input type="file" accept="image/*" data-arquivo>
+
+            <span>Enviar imagem</span>
+
+          </label>
+
+          <button class="h3d__link" type="button" data-exemplo>usar um exemplo</button>
+
+          <div class="h3d__previa" data-previa hidden></div>
+
+        </div>
+
+        <div class="h3d__ajustes" data-ajustes>
+
+          <label class="h3d__faixa h3d__faixa--simples"><span>Tamanho</span><input type="range" min="30" max="220" value="100" data-tamanho></label>
+
+          <label class="h3d__faixa h3d__faixa--simples"><span>↔ Lado</span><input type="range" min="-60" max="60" value="0" data-dx></label>
+
+          <label class="h3d__faixa h3d__faixa--simples"><span>↕ Altura</span><input type="range" min="-60" max="60" value="0" data-dy></label>
+
+          <label class="h3d__faixa h3d__faixa--simples"><span>⟳ Girar</span><input type="range" min="-180" max="180" value="0" data-rot></label>
+
+          <label class="h3d__check"><input type="checkbox" data-semfundo> Tirar o fundo da imagem</label>
+
+          <p class="h3d__dica">Com uma unha escolhida, arraste sobre ela para posicionar a arte.</p>
+
+        </div>
+
+        <div class="h3d__mini">
+
+          <button class="h3d__link" type="button" data-copiar>copiar para todas as unhas</button>
+
+          <button class="h3d__link" type="button" data-limpar>limpar</button>
+
+        </div>
+
+        <p class="h3d__aviso" data-aviso aria-live="polite"></p>
+
+      </div>
+
+      <div class="h3d__acoes">
+
+        <a class="h3d__btn h3d__btn--cheio" href="#agendar">Agendar este visual</a>
+
+        <button class="h3d__btn" type="button" data-voltar>← Trocar cor</button>
+
+      </div>
+
+    </div>
+
+    <!-- Janela de abas: Biblioteca de Modelos (Centralizada na Hero) -->
+    <div class="h3d__modal-modelos" data-modal-modelos hidden role="dialog" aria-modal="true" aria-label="Biblioteca de Modelos de Unha">
+      <div class="h3d__modal-caixa">
+        <div class="h3d__modal-topo">
+          <div class="h3d__modal-topo-info">
+            <span class="h3d__modal-marca">Catálogo Belle</span>
+            <strong class="h3d__modal-tit">Biblioteca de Modelos</strong>
+            <span class="h3d__modal-sub">Modelos prontos para as 5 unhas · os modulares adaptam-se à cor do seu esmalte</span>
+          </div>
+          <div class="h3d__modal-topo-acoes">
+            <button type="button" class="h3d__modal-btn-icone" data-modal-posicao title="Fixar na lateral para ver a mão 3D" aria-label="Alternar posição">⤢</button>
+            <button type="button" class="h3d__modal-fechar" data-modal-fechar aria-label="Fechar janela">✕</button>
+          </div>
+        </div>
+
+        <!-- Abas de categorias -->
+        <div class="h3d__modal-abas" role="tablist" aria-label="Categorias de modelos">
+          <button type="button" role="tab" class="h3d__modal-aba ativa" data-aba="todas">Todos (16)</button>
+          <button type="button" role="tab" class="h3d__modal-aba" data-aba="novos">Novos (6)</button>
+          <button type="button" role="tab" class="h3d__modal-aba" data-aba="classicos">Clássicos &amp; Francesinhas</button>
+          <button type="button" role="tab" class="h3d__modal-aba" data-aba="degrades">Degradê &amp; Joias</button>
+          <button type="button" role="tab" class="h3d__modal-aba" data-aba="artisticos">Linhas &amp; Efeitos</button>
+        </div>
+
+        <!-- Faixa "Filtrando por #tag" (aparece ao clicar numa hashtag de um modelo) -->
+        <div class="h3d__modal-tagbar" data-modal-tagbar hidden></div>
+
+        <!-- Seletor de destino: Todas as unhas ou uma unha específica -->
+        <div class="h3d__modal-dest-bar">
+          <span class="h3d__modal-dest-rotulo">Aplicar em:</span>
+          <div class="h3d__modal-destinos" data-modal-destinos role="radiogroup" aria-label="Qual unha receberá o modelo">
+            <button type="button" role="radio" data-i="-1" aria-checked="true">Todas as unhas</button>
+            <button type="button" role="radio" data-i="0">Polegar</button>
+            <button type="button" role="radio" data-i="1">Indicador</button>
+            <button type="button" role="radio" data-i="2">Médio</button>
+            <button type="button" role="radio" data-i="3">Anelar</button>
+            <button type="button" role="radio" data-i="4">Mínimo</button>
+          </div>
+        </div>
+
+        <!-- Grade de modelos -->
+        <div class="h3d__modal-grade" data-modal-grade></div>
+
+        <!-- Rodapé com status e botão de fechar -->
+        <div class="h3d__modal-rodape">
+          <span class="h3d__modal-status" data-modal-status hidden></span>
+          <button type="button" class="h3d__btn h3d__btn--cheio" data-modal-fechar>Fechar</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- 1.5 · 4 cards com os elementos em vídeo (fundo branco) -->
+
+  <section class="elementos" id="elementos" aria-label="A arte do cuidado">
+
+    <div class="elementos__topo">
+
+      <span class="caps">Assinatura Belle</span>
+
+      <h2 class="titulo">A beleza em movimento</h2>
+
+      <p class="elementos__sub">Preparo, pigmento, ritual e acabamento pensados em cada detalhe.</p>
+
+    </div>
+
+    <div class="elementos__grade">
+
+      <article class="elem-card">
+
+        <div class="elem-card__topo"><span>Preparo &amp; Brilho</span></div>
+
+        <div class="elem-card__midia">
+
+          <video src="assets/videos/unha-girando.mp4?v=2" style="--escala:1.14;--dy:1%" autoplay loop muted playsinline preload="auto" aria-label="Unha rosada com acabamento espelhado girando"></video>
+
+        </div>
+
+        <h3>Brilho Espelhado</h3>
+
+        <p>Superfície uniforme e luminosa que realça a curvatura natural da unha.</p>
+
+      </article>
+
+      <article class="elem-card">
+
+        <div class="elem-card__topo"><span>Cor &amp; Textura</span></div>
+
+        <div class="elem-card__midia">
+
+          <video src="assets/videos/esmalte-derramando.mp4?v=2" style="--escala:1.03;--dy:-2%" autoplay loop muted playsinline preload="auto" aria-label="Frasco derramando esmalte rosado fluido"></video>
+
+        </div>
+
+        <h3>Fluidez &amp; Pigmento</h3>
+
+        <p>Esmaltes de cobertura intensa e traço macio, aplicados sem marcas.</p>
+
+      </article>
+
+      <article class="elem-card">
+
+        <div class="elem-card__topo"><span>Experiência</span></div>
+
+        <div class="elem-card__midia">
+
+          <video src="assets/videos/esmalte-taca.mp4?v=2" style="--escala:1.05;--dx:-2%;--dy:1%" autoplay loop muted playsinline preload="auto" aria-label="Esmalte rosado sendo servido em uma taça de cristal"></video>
+
+        </div>
+
+        <h3>Ritual sem Pressa</h3>
+
+        <p>Um momento reservado só para você, com hora marcada e cuidado atento.</p>
+
+      </article>
+
+      <article class="elem-card">
+
+        <div class="elem-card__topo"><span>Alongamento</span></div>
+
+        <div class="elem-card__midia">
+
+          <video src="assets/videos/esmalte-espiral.mp4?v=2" style="--escala:1.0" autoplay loop muted playsinline preload="auto" aria-label="Frasco de esmalte envolvido por uma espiral rosada"></video>
+
+        </div>
+
+        <h3>Forma &amp; Escultura</h3>
+
+        <p>Acabamento leve, resistente e desenhado na medida do seu estilo.</p>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- 2 · explore -->
+
+  <section class="explore" id="servicos" aria-label="Explore as cores">
+
+    <h2 class="titulo rv">Explore: Cores</h2>
+
+    <div class="cartoes">
+
+      <a class="cartao tem-hover rv" href="#agendar">
+
+        <div class="cartao__img"><img src="assets/otimizado/ng-04-galeria-francesinha.webp" alt="Francesinha em vinho sobre unhas nude" loading="lazy"><img class="h" src="assets/otimizado/ng-04-galeria-francesinha-hover.webp" alt="" loading="lazy"></div>
+
+        <h3>Francesinha</h3><p>Clássica e delicada</p>
+
+      </a>
+
+      <a class="cartao rv" href="#agendar">
+
+        <div class="cartao__img"><img src="assets/otimizado/ng-05-galeria-nude.webp" alt="Nude perolado em unhas longas" loading="lazy"></div>
+
+        <h3>Nude perolado</h3><p>Leve e luminoso</p>
+
+      </a>
+
+      <a class="cartao tem-hover rv" href="#agendar">
+
+        <div class="cartao__img"><img src="assets/otimizado/ng-06-galeria-vinho.webp" alt="Esmaltação em vinho brilhante" loading="lazy"><img class="h" src="assets/otimizado/ng-06-galeria-vinho-hover.webp" alt="" loading="lazy"></div>
+
+        <h3>Vinho</h3><p>Intenso e elegante</p>
+
+      </a>
+
+      <a class="cartao tem-hover rv" href="#agendar">
+
+        <div class="cartao__img"><img src="assets/otimizado/ng-07-galeria-nail-art.webp" alt="Detalhe de nail art" loading="lazy"><img class="h" src="assets/otimizado/ng-07-galeria-nail-art-hover.webp" alt="" loading="lazy"></div>
+
+        <h3>Nail art</h3><p>Detalhes desenhados com você</p>
+
+      </a>
+
+    </div>
+
+    <a class="ver-todos" href="#agendar">Ver todos os serviços</a>
+
+  </section>
+
+  <!-- 3 · banner de seção em slides (era a hero) -->
+
+  <section class="banner" aria-label="Destaques" aria-roledescription="carrossel">
+
+    <div class="slide slide--escuro on">
+
+      <img src="assets/otimizado/ng-01-hero-desktop.webp" alt="Mãos com unhas nude e francesinha em vinho apoiadas sobre uma peça off-white" loading="lazy">
+
+      <div class="slide__txt">
+
+        <h2>Unhas que combinam com você</h2>
+
+        <p>Cor, formato e acabamento escolhidos com calma.</p>
+
+        <a class="btn btn--cheio" href="#agendar">Agendar horário</a>
+
+      </div>
+
+    </div>
+
+    <div class="slide slide--claro">
+
+      <img src="assets/otimizado/ng-09-banner-agendamento.webp" alt="Mão com unhas em vinho sobre um tecido de cetim vinho" loading="lazy">
+
+      <div class="slide__txt">
+
+        <h2>Vinho profundo</h2>
+
+        <p>Um acabamento que chama atenção sem pesar.</p>
+
+        <a class="btn btn--claro" href="#servicos">Ver cores</a>
+
+      </div>
+
+    </div>
+
+    <button class="pausa" id="pausa" aria-label="Pausar a apresentação">
+
+      <svg class="ic-pause" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2" y="1" width="3.4" height="12"/><rect x="8.6" y="1" width="3.4" height="12"/></svg>
+
+      <svg class="ic-play" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1l10 6-10 6z"/></svg>
+
+    </button>
+
+  </section>
+
+  <!-- 3 · o que esperar -->
+
+  <section class="esperar" id="esperar" aria-label="O que esperar">
+
+    <h2 class="titulo rv">O que esperar da Belle</h2>
+
+    <div class="car">
+
+      <button class="setaC ant" id="ant" aria-label="Anterior"><svg viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 1L2 9l8 8"/></svg></button>
+
+      <div class="car__trilho" id="trilho" tabindex="0">
+
+        <article class="card"><span class="cap">Atendimento</span><h3>Hora marcada, sem pressa</h3><p>Você reserva o horário e é recebida com calma, para escolher e relaxar.</p><span class="rodape-card">Belle Estúdio</span></article>
+
+        <article class="card"><span class="cap">Escolha</span><h3>Decidido junto com você</h3><p>Cor, formato e acabamento definidos na conversa, do jeito que combina com o seu dia a dia.</p><span class="rodape-card">Belle Estúdio</span></article>
+
+        <article class="card"><span class="cap">Técnica</span><h3>Atenção a cada detalhe</h3><p>Materiais e técnica escolhidos para um acabamento limpo e bonito.</p><span class="rodape-card">Belle Estúdio</span></article>
+
+        <article class="card"><span class="cap">Cuidado</span><h3>Mãos bem cuidadas</h3><p>Cutículas e unhas tratadas com atenção, antes da cor.</p><span class="rodape-card">Belle Estúdio</span></article>
+
+      </div>
+
+      <button class="setaC prox" id="prox" aria-label="Próximo"><svg viewBox="0 0 12 18" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 1l8 8-8 8"/></svg></button>
+
+    </div>
+
+  </section>
+
+  <!-- 4 · faixa de serviços -->
+
+  <section class="faixa" aria-label="Serviços">
+
+    <h2 class="titulo rv">Feito para você</h2>
+
+    <ul class="rv"><li>Esmaltação</li><li>Alongamento</li><li>Nail art</li><li>Cuidados</li></ul>
+
+  </section>
+
+  <!-- 5 · dois blocos -->
+
+  <section class="duplo" id="estudio" aria-label="Destaques">
+
+    <article class="bloco rv">
+
+      <img src="assets/otimizado/ng-03-destaque-editorial.webp" alt="Mão com unhas em vinho sobre um tecido de cetim" loading="lazy">
+
+      <div class="bloco__txt">
+
+        <span class="caps">Cor do momento</span>
+
+        <h2>Vinho profundo</h2>
+
+        <p>Acabamento espelhado, sem exagero.</p>
+
+        <a class="btn btn--claro" href="#servicos">Ver cores</a>
+
+      </div>
+
+    </article>
+
+    <article class="bloco rv">
+
+      <img src="assets/otimizado/ng-08-experiencia-manicure.webp" alt="Profissional de luvas desenhando um detalhe em vinho na unha" loading="lazy">
+
+      <div class="bloco__txt">
+
+        <span class="caps">Visite o estúdio</span>
+
+        <h2>Belle Estúdio</h2>
+
+        <p>Cuidado feito com calma e atenção.</p>
+
+        <a class="btn btn--claro" href="#agendar">Agendar horário</a>
+
+      </div>
+
+    </article>
+
+  </section>
+
+  <!-- 6 · faixa bege: texto + imagem -->
+
+  <section class="bege metade" id="agendar" aria-label="Agende seu horário">
+
+    <div class="metade__txt rv">
+
+      <span class="caps">Atendimento</span>
+
+      <h2>Um momento de cuidado para as suas mãos.</h2>
+
+      <a class="btn btn--cheio" href="#contato">Agendar horário</a>
+
+    </div>
+
+    <div class="metade__img rv"><img src="assets/otimizado/ng-02-hero-mobile.webp" alt="Mão com unhas em vinho sobre cetim, em close" loading="lazy"></div>
+
+  </section>
+
+  <!-- 7 · faixa bege: imagem + texto (redes) -->
+
+  <section class="bege metade inv sem-topo" aria-label="Redes sociais">
+
+    <div class="metade__txt rv">
+
+      <span class="caps">Se inspire</span>
+
+      <h2>Acompanhe a Belle no Instagram e no TikTok</h2>
+
+      <a class="btn btn--cheio" href="#">Seguir</a>
+
+    </div>
+
+    <div class="metade__img rv"><img src="assets/otimizado/ng-07-galeria-nail-art-hover.webp" alt="Detalhe de nail art em close" loading="lazy"></div>
+
+  </section>
+
+  <!-- 8 · newsletter -->
+
+  <section class="news" aria-label="Newsletter">
+
+    <h2 class="rv">Receba novidades da Belle</h2>
+
+    <p class="rv">Assine para saber primeiro sobre novidades, avisos e horários.</p>
+
+    <form class="rv" id="form" novalidate>
+
+      <input type="email" name="email" placeholder="Seu e-mail" aria-label="Seu e-mail" autocomplete="email">
+
+      <button class="btn" type="submit">Assinar</button>
+
+    </form>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+  </section>
+
+</main>
+
+<footer class="rodape" id="contato">
+
+  <div class="rodape__cols">
+
+    <div class="col"><h4>Atendimento</h4><a href="#">Perguntas frequentes</a><a href="#">Política de privacidade</a><a href="#">Termos e condições</a><a href="#">Acessibilidade</a><a href="#">Contato</a></div>
+
+    <div class="col"><h4>Siga a Belle</h4><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Pinterest</a><a href="#">Facebook</a><a href="#">Newsletter</a></div>
+
+    <div class="col"><h4>Belle</h4><a href="#estudio">Nosso estúdio</a><a href="#servicos">Serviços</a><a href="#servicos">Galeria</a><a href="#agendar">Agendar horário</a></div>
+
+  </div>
+
+  <small>© 2026 Belle. Todos os direitos reservados.</small>
+
+</footer>
+
+<div class="veu" id="veu"></div>
+
+<aside class="gaveta" id="gaveta" aria-label="Menu" aria-hidden="true">
+
+  <button class="fechar" id="fecha" aria-label="Fechar menu">&times;</button>
+
+  <ul>
+
+    <li><a href="#servicos">Serviços</a></li><li><a href="#servicos">Cores</a></li><li><a href="#servicos">Galeria</a></li><li><a href="#estudio">Estúdio</a></li><li><a href="#contato">Contato</a></li><li><a href="#agendar">Agendar horário</a></li>
+
+  </ul>
+
+</aside>
+
+<script>
+
+(function(){
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* sombra no cabeçalho depois do primeiro scroll */
+
+  var topo = document.getElementById('topo');
+
+  addEventListener('scroll', function(){ topo.classList.toggle('sombra', scrollY > 140); }, {passive:true});
+
+  /* hero em slides com pausa */
+
+  var slides = [].slice.call(document.querySelectorAll('.slide')), i = 0, timer = null, pausa = document.getElementById('pausa');
+
+  var parado = reduce;
+
+  function mostra(n){ slides[i].classList.remove('on'); i = (n + slides.length) % slides.length; slides[i].classList.add('on'); var im = slides[i].querySelector('img'); if (im) im.loading = 'eager'; }
+
+  function liga(){ if (timer) clearInterval(timer); if (!parado) timer = setInterval(function(){ mostra(i + 1); }, 7000); }
+
+  function atualiza(){ pausa.classList.toggle('parado', parado); pausa.setAttribute('aria-label', parado ? 'Retomar a apresentação' : 'Pausar a apresentação'); }
+
+  pausa.addEventListener('click', function(){ parado = !parado; atualiza(); liga(); });
+
+  atualiza(); liga();
+
+  /* revelações */
+
+  var rvs = document.querySelectorAll('.rv');
+
+  if (reduce || !('IntersectionObserver' in window)){ [].forEach.call(rvs, function(e){ e.classList.add('in'); }); }
+
+  else {
+
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:.15, rootMargin:'0px 0px -4% 0px'});
+
+    [].forEach.call(rvs, function(e){ io.observe(e); });
+
+  }
+
+  /* carrossel "o que esperar" */
+
+  var tr = document.getElementById('trilho');
+
+  function passo(){ var c = tr.querySelector('.card'); return c ? c.getBoundingClientRect().width + 25.6 : 300; }
+
+  document.getElementById('ant').addEventListener('click', function(){ tr.scrollBy({left:-passo(), behavior: reduce ? 'auto' : 'smooth'}); });
+
+  document.getElementById('prox').addEventListener('click', function(){ tr.scrollBy({left: passo(), behavior: reduce ? 'auto' : 'smooth'}); });
+
+  /* gaveta do menu no celular */
+
+  var g = document.getElementById('gaveta'), v = document.getElementById('veu');
+
+  function abre(o){ g.classList.toggle('aberta', o); v.classList.toggle('on', o); g.setAttribute('aria-hidden', String(!o)); }
+
+  document.getElementById('abre').addEventListener('click', function(){ abre(true); });
+
+  document.getElementById('fecha').addEventListener('click', function(){ abre(false); });
+
+  v.addEventListener('click', function(){ abre(false); });
+
+  [].forEach.call(g.querySelectorAll('a'), function(a){ a.addEventListener('click', function(){ abre(false); }); });
+
+  addEventListener('keydown', function(e){ if (e.key === 'Escape') abre(false); });
+
+  /* newsletter de demonstração */
+
+  [].forEach.call(document.querySelectorAll('.elem-card__midia video'), function(v){ v.muted = true; v.play().catch(function(){}); });
+
+  document.getElementById('form').addEventListener('submit', function(e){
+
+    e.preventDefault();
+
+    document.getElementById('status').textContent = 'Formulário de demonstração: o envio ainda não está ligado.';
+
+  });
+
+})();
+
+</script>
+
+<script type="importmap">
+
+{ "imports": {
+
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+
+} }
+
+</script>
+
+<script type="module" src="assets/hero3d/hero3d.js?v=24"></script>
+
+</body>
+
+</html>

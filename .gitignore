@@ -1,0 +1,26 @@
+.env
+__pycache__/
+*.zip
+
+# Só o site vai para o repositório
+/reference/
+/referencia-pesquisa/
+/netlify/
+/tools/
+/venetian-spa/
+/zhenya-cure/
+/servidor.py
+/iniciar.bat
+/qrcode-celular.png
+/PLANEJAMENTO-ASSETS.md
+
+# assets: só o que o index.html e o hero3d carregam
+/assets/*
+!/assets/3d/
+!/assets/francesinha-rosa/
+!/assets/hero3d/
+!/assets/modelos/
+!/assets/modelos-gabarito/
+!/assets/otimizado/
+!/assets/videos/
+!/assets/gabarito-francesinha-rosa.png

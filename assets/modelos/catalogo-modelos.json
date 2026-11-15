@@ -1,0 +1,202 @@
+[
+  {
+    "id": "01-francesinha-classica",
+    "num": "01",
+    "titulo": "Francesinha Clássica",
+    "subtitulo": "Ponta branca com base nude translúcida",
+    "categoria": "Clássicos Elegantes",
+    "dificuldade": "Básico / Essencial",
+    "descricao": "O clássico mais pedido em todos os salões de manicure. Linha curva impecável na ponta acompanhando o sorriso natural da unha sobre base nude translúcida acetinada.",
+    "caminhos": {
+      "folha": "reference/modelos/01-francesinha-classica/folha.png",
+      "previa": "reference/modelos/01-francesinha-classica/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "02-baby-boomer",
+    "num": "02",
+    "titulo": "Baby Boomer (French Ombré)",
+    "subtitulo": "Degradê suave do nude rosé ao branco leitoso",
+    "categoria": "Degradês & Esfumados",
+    "dificuldade": "Intermediário",
+    "descricao": "Transição esfumada contínua sem demarcação brusca, conferindo efeito aveludado e sofisticado que combina com qualquer formato de unha.",
+    "caminhos": {
+      "folha": "reference/modelos/02-baby-boomer/folha.png",
+      "previa": "reference/modelos/02-baby-boomer/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "03-filha-unica-ouro",
+    "num": "03",
+    "titulo": "Filha Única com Folha de Ouro",
+    "subtitulo": "Nude refinado com anelar decorado em foil metálico",
+    "categoria": "Filha Única",
+    "dificuldade": "Fácil & Rápido",
+    "descricao": "Quatro unhas em tom nude uniforme e o dedo anelar iluminado com fragmentos orgânicos de folha de ouro (foil), proporcionando um brilho nobre sem exageros.",
+    "caminhos": {
+      "folha": "reference/modelos/03-filha-unica-ouro/folha.png",
+      "previa": "reference/modelos/03-filha-unica-ouro/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "04-ponto-de-luz",
+    "num": "04",
+    "titulo": "Ponto de Luz Minimalista",
+    "subtitulo": "Nude perolado com strass cintilante na cutícula",
+    "categoria": "Minimalismo & Joias",
+    "dificuldade": "Fácil / Rápido",
+    "descricao": "Esmaltação clean impecável acompanhada de uma pedraria solitária no centro da raiz de cada unha, entregando iluminação discreta com ar de joia.",
+    "caminhos": {
+      "folha": "reference/modelos/04-ponto-de-luz/folha.png",
+      "previa": "reference/modelos/04-ponto-de-luz/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "05-micro-francesinha-vinho",
+    "num": "05",
+    "titulo": "Micro Francesinha Vinho",
+    "subtitulo": "Traço ultrafino moderno em vinho bordô na ponta",
+    "categoria": "Francesinhas Modernas",
+    "dificuldade": "Fácil / Médio",
+    "descricao": "Variação contemporânea da francesinha com traço micro milimétrico em vinho profundo, destacando o comprimento das unhas de forma limpa e editorial.",
+    "caminhos": {
+      "folha": "reference/modelos/05-micro-francesinha-vinho/folha.png",
+      "previa": "reference/modelos/05-micro-francesinha-vinho/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "06-linhas-minimalistas",
+    "num": "06",
+    "titulo": "Linhas Orgânicas Minimalistas",
+    "subtitulo": "Traço ondulado fluido em branco e dourado",
+    "categoria": "Linhas & Formas",
+    "dificuldade": "Médio (Traço livre)",
+    "descricao": "Curvas assimétricas que criam um desenho abstrato e gracioso sobre o esmalte neutro, técnica altamente solicitada pelo público jovem e moderno.",
+    "caminhos": {
+      "folha": "reference/modelos/06-linhas-minimalistas/folha.png",
+      "previa": "reference/modelos/06-linhas-minimalistas/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "07-poa-delicado",
+    "num": "07",
+    "titulo": "Poá Retrô Delicado (Bolinhas)",
+    "subtitulo": "Micro pontinhos brancos simétricos sobre rosé",
+    "categoria": "Romântico & Retrô",
+    "dificuldade": "Fácil / Prático",
+    "descricao": "Visual romântico e delicado com pontinhos aplicados com boleador, criando uma padronagem atemporal de fácil execução em mesa de manicure.",
+    "caminhos": {
+      "folha": "reference/modelos/07-poa-delicado/folha.png",
+      "previa": "reference/modelos/07-poa-delicado/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "08-marmorizado-quartzo",
+    "num": "08",
+    "titulo": "Marmorizado Quartzo Rosa",
+    "subtitulo": "Efeito pedra natural com veios translúcidos",
+    "categoria": "Efeitos Minerais",
+    "dificuldade": "Médio (Técnica esponjada/pincel)",
+    "descricao": "Técnica de manicure que replica a translucidez e os veios minerais do quartzo rosa, proporcionando sensação orgânica de pedra preciosa polida.",
+    "caminhos": {
+      "folha": "reference/modelos/08-marmorizado-quartzo/folha.png",
+      "previa": "reference/modelos/08-marmorizado-quartzo/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "09-francesinha-diagonal",
+    "num": "09",
+    "titulo": "Francesinha Diagonal (Gravata)",
+    "subtitulo": "Canto geométrico moderno com filete dourado",
+    "categoria": "Geométricos",
+    "dificuldade": "Médio",
+    "descricao": "Corte angular elegante no canto superior com divisão metálica, alongando visualmente os dedos com ar contemporâneo e executivo.",
+    "caminhos": {
+      "folha": "reference/modelos/09-francesinha-diagonal/folha.png",
+      "previa": "reference/modelos/09-francesinha-diagonal/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  },
+  {
+    "id": "10-meia-lua-invertida",
+    "num": "10",
+    "titulo": "Meia-Lua (Francesinha Invertida)",
+    "subtitulo": "Corpo em vinho bordeaux com lúnula em nude suave",
+    "categoria": "Vintage & Luxo",
+    "dificuldade": "Médio",
+    "descricao": "Estilo clássico vintage dos anos 40 revivido nos salões de luxo: destaque curvilíneo na base da cutícula em contraste com o esmalte vinho profundo.",
+    "caminhos": {
+      "folha": "reference/modelos/10-meia-lua-invertida/folha.png",
+      "previa": "reference/modelos/10-meia-lua-invertida/previa.png",
+      "unhas": {
+        "polegar": "polegar.png",
+        "indicador": "indicador.png",
+        "medio": "medio.png",
+        "anelar": "anelar.png",
+        "minimo": "minimo.png"
+      }
+    }
+  }
+]
