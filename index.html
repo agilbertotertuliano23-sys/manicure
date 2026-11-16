@@ -16,9 +16,42 @@
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap"></noscript>
 
 <link rel="preload" href="assets/3d/esmalte-mao.glb" as="fetch" type="model/gltf-binary" crossorigin>
+
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+
+<link rel="preload" href="https://www.gstatic.com/draco/versioned/decoders/1.5.7/draco_wasm_wrapper.js" as="fetch" crossorigin>
+
+<link rel="preload" href="https://www.gstatic.com/draco/versioned/decoders/1.5.7/draco_decoder.wasm" as="fetch" crossorigin>
+
+<script type="importmap">
+
+{ "imports": {
+
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+
+} }
+
+</script>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" crossorigin>
+
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js" crossorigin>
+
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/DRACOLoader.js" crossorigin>
+
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/environments/RoomEnvironment.js" crossorigin>
+
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/utils/BufferGeometryUtils.js" crossorigin>
+
+<link rel="modulepreload" href="assets/hero3d/hero3d.js?v=37">
 
 <link rel="stylesheet" href="assets/hero3d/hero3d.css?v=33">
 
@@ -771,7 +804,7 @@
 
         <div class="elem-card__midia">
 
-          <video src="assets/videos/unha-girando.mp4?v=2" style="--escala:1.14;--dy:1%" autoplay loop muted playsinline preload="auto" aria-label="Unha rosada com acabamento espelhado girando"></video>
+          <video data-src="assets/videos/unha-girando.mp4?v=2" style="--escala:1.14;--dy:1%" autoplay loop muted playsinline preload="none" aria-label="Unha rosada com acabamento espelhado girando"></video>
 
         </div>
 
@@ -787,7 +820,7 @@
 
         <div class="elem-card__midia">
 
-          <video src="assets/videos/esmalte-derramando.mp4?v=2" style="--escala:1.03;--dy:-2%" autoplay loop muted playsinline preload="auto" aria-label="Frasco derramando esmalte rosado fluido"></video>
+          <video data-src="assets/videos/esmalte-derramando.mp4?v=2" style="--escala:1.03;--dy:-2%" autoplay loop muted playsinline preload="none" aria-label="Frasco derramando esmalte rosado fluido"></video>
 
         </div>
 
@@ -803,7 +836,7 @@
 
         <div class="elem-card__midia">
 
-          <video src="assets/videos/esmalte-taca.mp4?v=2" style="--escala:1.05;--dx:-2%;--dy:1%" autoplay loop muted playsinline preload="auto" aria-label="Esmalte rosado sendo servido em uma taça de cristal"></video>
+          <video data-src="assets/videos/esmalte-taca.mp4?v=2" style="--escala:1.05;--dx:-2%;--dy:1%" autoplay loop muted playsinline preload="none" aria-label="Esmalte rosado sendo servido em uma taça de cristal"></video>
 
         </div>
 
@@ -819,7 +852,7 @@
 
         <div class="elem-card__midia">
 
-          <video src="assets/videos/esmalte-espiral.mp4?v=2" style="--escala:1.0" autoplay loop muted playsinline preload="auto" aria-label="Frasco de esmalte envolvido por uma espiral rosada"></video>
+          <video data-src="assets/videos/esmalte-espiral.mp4?v=2" style="--escala:1.0" autoplay loop muted playsinline preload="none" aria-label="Frasco de esmalte envolvido por uma espiral rosada"></video>
 
         </div>
 
@@ -1177,19 +1210,19 @@
 
 </script>
 
-<script type="importmap">
-
-{ "imports": {
-
-  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-
-} }
-
+<script>
+(function(){
+  var vs=[].slice.call(document.querySelectorAll('video[data-src]'));
+  function ligar(v){ if(!v.getAttribute('data-src')) return; v.src=v.getAttribute('data-src'); v.removeAttribute('data-src'); v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  if(!('IntersectionObserver' in window)){ vs.forEach(ligar); return; }
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); ligar(e.target); } }); },{rootMargin:'400px 0px'});
+  vs.forEach(function(v){ io.observe(v); });
+})();
 </script>
 
-<script type="module" src="assets/hero3d/hero3d.js?v=36"></script>
+
+
+<script type="module" src="assets/hero3d/hero3d.js?v=37"></script>
 
 </body>
 

@@ -1070,7 +1070,12 @@ function iniciar(raiz) {
 
 
 
-  new GLTFLoader().load(URL_MODELO, (gltf) => {
+  /* o modelo principal agora vem comprimido (Draco + WebP): 2,9 MB -> 0,65 MB, mesma geometria */
+  const dracoBase = new DRACOLoader().setDecoderPath(URL_DRACO);
+
+  new GLTFLoader().setDRACOLoader(dracoBase).load(URL_MODELO, (gltf) => {
+
+    dracoBase.dispose(); // a geometria já foi decodificada; libera os workers
 
     const g = gltf.scene;
 
