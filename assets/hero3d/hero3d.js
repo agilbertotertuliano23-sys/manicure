@@ -653,8 +653,8 @@ function iniciar(raiz) {
 
 
   /* ao abrir o modelo as cinco unhas já vêm com a francesinha rosa (arte-inicial.js) */
-  /* celular: sem a francesinha de abertura, para a unha da mão mostrar a cor do esmalte escolhido desde o início */
-  if (!matchMedia('(max-width:760px)').matches) aplicarArteInicial(editor);
+  /* sem a francesinha de abertura (celular e desktop), para a unha da mão mostrar a cor do esmalte escolhido desde o início */
+  void aplicarArteInicial; // módulo mantido importado, mas não aplicado na abertura
 
   /* biblioteca de modelos logo abaixo das tonalidades (etapa 1): vai para a mão vista de cima e abre a biblioteca ao lado */
   const botaoLibInicio = $('[data-modelos-inicio]');
@@ -867,11 +867,20 @@ function iniciar(raiz) {
   /* tela em pé: enquadramento de cada vista dentro da parte livre da tela (muda com o texto e o cartão) */
 
   let encFrascos = { f: 1, dx: 0, dy: 0 }, encMao = { f: 1, dx: 0, dy: 0 }, encUnha = { f: 1.5, dx: 0, dy: 0 };
+  let encFrascosLargo = false; // tela larga, primeira etapa: frascos + mão enquadrados na área livre (calcularEnquadreFrascosLargo)
   let encLivre = false; // tela larga com a biblioteca aberta ao lado: a mão é enquadrada na faixa livre (calcularEnquadreLivre)
 
   const infoEl = $('.h3d__info');
 
   const giroEl = $('.h3d__giro');
+
+  /* tela larga, primeira etapa: ao parar de rolar, reenquadra frascos + mão na parte visível da seção */
+  let rolagemTimer = 0;
+  addEventListener('scroll', () => {
+    if (modoMao || cam.aspect < 1) return;
+    clearTimeout(rolagemTimer);
+    rolagemTimer = setTimeout(enquadrar, 160);
+  }, { passive: true });
 
 
 
@@ -923,14 +932,46 @@ function iniciar(raiz) {
     encLivre = true;
   }
 
+  /* frascos + mão (a mão aparece ao lado dos esmaltes na primeira tela): pontos dos frascos mais os cantos da caixa da mão */
+  function pontosFrascosComMao() {
+    const pts = PTS_FRASCOS.slice();
+    try {
+      if (mao) {
+        const b = new THREE.Box3().setFromObject(mao);
+        if (!b.isEmpty()) for (const x of [b.min.x, b.max.x]) for (const y of [b.min.y, b.max.y]) for (const z of [b.min.z, b.max.z]) pts.push(new THREE.Vector3(x, y, z));
+      }
+    } catch (e) { /* a mão ainda não existe: só os frascos */ }
+    return pts;
+  }
+
+  /* tela larga, primeira etapa: frascos e mão cabem juntos na área à esquerda do painel de cores */
+  function calcularEnquadreFrascosLargo() {
+    const rr = raiz.getBoundingClientRect();
+    const xPainel = infoEl.getBoundingClientRect().left - rr.left;
+    /* parte da seção que realmente aparece: abaixo do cabeçalho fixo e acima do fim da janela */
+    const cab = document.querySelector('header');
+    const topoVis = cab ? Math.max(0, cab.getBoundingClientRect().bottom - rr.top) : 0;
+    const fundoVis = Math.min(altura, innerHeight - rr.top);
+    let y0 = 22, y1 = altura - 22;
+    if (fundoVis - topoVis > 280) { y0 = topoVis + 22; y1 = fundoVis - 22; }
+    const rect = { x0: 28, x1: Math.max(360, xPainel - 28), y0, y1 };
+    encFrascos = ENQ.ajustar({ vista: VISTAS.frascos, pts: pontosFrascosComMao(), W: largura, H: altura, fov: cam.fov, rect, fMin: 0.6 });
+    encFrascosLargo = true;
+  }
+
   function calcularEnquadres() {
 
     etiquetaLarg = etiquetaSua.offsetWidth || etiquetaLarg;
 
     encLivre = false;
     raiz.style.removeProperty('--giro-x');
+    encFrascosLargo = false;
     const lateral = modoMao && bibliotecaLateral();
-    if (cam.aspect >= 1) { if (lateral) calcularEnquadreLivre(); return; }
+    if (cam.aspect >= 1) {
+      if (lateral) calcularEnquadreLivre();
+      else if (!modoMao) calcularEnquadreFrascosLargo();
+      return;
+    }
 
     /* celular: com a biblioteca aberta ela vira uma gaveta embaixo (no lugar do cartão); a mão fica na parte de cima */
     const rr = raiz.getBoundingClientRect();
@@ -958,7 +999,7 @@ function iniciar(raiz) {
     const y0Fr = Math.max(infoEl.offsetTop + infoEl.offsetHeight + 18, Math.round(altura * 0.38));
     const rectFr = { x0: lado, x1: largura - lado, y0: y0Fr, y1: altura - 36 };
 
-    encFrascos = ENQ.ajustar({ vista: VISTAS.frascos, pts: PTS_FRASCOS, W: largura, H: altura, fov: cam.fov, rect: rectFr, fMin: 0.85 });
+    encFrascos = ENQ.ajustar({ vista: VISTAS.frascos, pts: PTS_FRASCOS, W: largura, H: altura, fov: cam.fov, rect: rectFr, fMin: 0.85 }); // celular: só os frascos (a mão aparece por trás, um pouco cortada)
 
   }
 
@@ -1242,6 +1283,8 @@ function iniciar(raiz) {
     definirArte(ativosArte);
 
     raiz.classList.add('pronto');
+
+    enquadrar(); // a mão já existe: reenquadra frascos + mão
 
     ligarAuto();
 
@@ -1749,7 +1792,7 @@ function iniciar(raiz) {
 
     const enc = naUnha ? encUnha : modoMao ? encMao : encFrascos;
 
-    const usaEnc = emPe || (encLivre && modoMao);
+    const usaEnc = emPe || (encLivre && modoMao) || (encFrascosLargo && !modoMao);
     const fatorBase = usaEnc ? enc.f : naUnha ? 1 : afastamento(vista);
 
     // Zoom suave e interativo na mão
@@ -1876,8 +1919,8 @@ function iniciar(raiz) {
 
 
     if (mao) {
-      /* celular (tela em pé): a mão já aparece ao lado dos esmaltes na primeira tela */
-      mao.visible = modoMao || cam.aspect < 1 || (fileira && fileira.position.z > 0.3);
+      /* a mão já aparece ao lado dos esmaltes na primeira tela (celular e desktop) */
+      mao.visible = true;
     }
 
       /* etiqueta HTML "Sua cor" presa à frente do frasco da esquerda */

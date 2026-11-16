@@ -1030,6 +1030,21 @@
   .h3d.modo-mao .h3d__zoom-lateral{transform:translateY(-50%)}
   .h3d.painel-saindo .h3d__zoom-lateral{transform:translateY(-50%) translateX(14px)}
 }
+/* desktop: biblioteca com os botões de seleção organizados (abas e "Aplicar em" em linha única, nada espremido, caixa dentro da seção) */
+@media (min-width:761px){
+  .h3d__modal-caixa{max-height:min(88vh,740px,calc(100% - 24px))}
+  .h3d__modal-modelos.lateral .h3d__modal-caixa{max-height:min(88vh,760px,calc(100% - 24px))}
+  .h3d__modal-topo,.h3d__modal-abas,.h3d__modal-dest-bar,.h3d__modal-tagbar,.h3d__modal-rodape{flex:none}
+  .h3d__modal-abas{flex-wrap:nowrap;padding-bottom:.6rem}
+  .h3d__modal-aba{flex:none;white-space:nowrap}
+  .h3d__modal-modelos.lateral .h3d__modal-aba{font-size:10px;padding:.38rem .7rem}
+  .h3d__modal-modelos.lateral .h3d__modal-dest-bar{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:.4rem;margin:.65rem 0 .55rem}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.25rem;scrollbar-width:none}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos::-webkit-scrollbar{display:none}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos button{flex:none;white-space:nowrap;font-size:9.5px;padding:.28rem .6rem}
+  .h3d__modal-modelos.lateral .h3d__modal-grade{flex:1 1 auto;min-height:0}
+  .h3d__modal-modelos.lateral .h3d__modal-rodape{margin-top:.5rem;padding-top:.6rem}
+}
 @keyframes h3d-lightbox-sobe{
   from{opacity:0;transform:translateY(40px)}
   to{opacity:1;transform:none}
