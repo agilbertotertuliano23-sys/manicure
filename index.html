@@ -1212,11 +1212,17 @@
 
 <script>
 (function(){
+  /* vídeos só baixam depois que a cena 3D da hero ficou pronta (ou em 6 s) e quando chegam perto da tela */
   var vs=[].slice.call(document.querySelectorAll('video[data-src]'));
+  var raiz=document.getElementById('hero3d');
   function ligar(v){ if(!v.getAttribute('data-src')) return; v.src=v.getAttribute('data-src'); v.removeAttribute('data-src'); v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
-  if(!('IntersectionObserver' in window)){ vs.forEach(ligar); return; }
-  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); ligar(e.target); } }); },{rootMargin:'400px 0px'});
-  vs.forEach(function(v){ io.observe(v); });
+  function iniciar(){
+    if(!('IntersectionObserver' in window)){ vs.forEach(ligar); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); ligar(e.target); } }); },{rootMargin:'200px 0px'});
+    vs.forEach(function(v){ io.observe(v); });
+  }
+  var t0=Date.now();
+  var iv=setInterval(function(){ if(!raiz||raiz.classList.contains('pronto')||raiz.classList.contains('sem3d')||Date.now()-t0>6000){ clearInterval(iv); iniciar(); } },250);
 })();
 </script>
 
