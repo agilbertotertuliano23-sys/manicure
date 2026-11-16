@@ -229,6 +229,12 @@ export function iniciarModelosSalao({ modal, botaoAbrir, getAlvo, setAlvo, aoApl
     modal.classList.remove('lateral'); // abre centralizado
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
+    /* celular: abre direto como gaveta embaixo, com o carrossel de imagens inteiras */
+    if (matchMedia('(max-width:760px)').matches) {
+      modal.classList.add('lateral');
+      document.body.style.overflow = '';
+      if (btnPosicao) { btnPosicao.title = 'Centralizar na tela'; btnPosicao.textContent = '⤢'; }
+    }
   }
 
   function fecharModal() {
@@ -257,8 +263,82 @@ export function iniciarModelosSalao({ modal, botaoAbrir, getAlvo, setAlvo, aoApl
     if (!modal.classList.contains('lateral') && e.target === modal) fecharModal();
   });
 
+  /* ---------- Visualização ampliada do modelo em quadrado cheio (Lightbox) ---------- */
+  const lightbox = document.querySelector('[data-lightbox-modelo]');
+  let listaFiltradaAtual = [];
+  let indexLightboxAtual = 0;
+
+  function abrirLightbox(m) {
+    if (!lightbox) return;
+    const idx = listaFiltradaAtual.findIndex((x) => x.id === m.id);
+    indexLightboxAtual = idx >= 0 ? idx : 0;
+    atualizarLightbox();
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharLightbox() {
+    if (!lightbox) return;
+    lightbox.hidden = true;
+    if (modal.hidden) document.body.style.overflow = '';
+  }
+
+  function atualizarLightbox() {
+    if (!lightbox || !listaFiltradaAtual.length) return;
+    indexLightboxAtual = (indexLightboxAtual + listaFiltradaAtual.length) % listaFiltradaAtual.length;
+    const m = listaFiltradaAtual[indexLightboxAtual];
+    if (!m) return;
+
+    const imgEl = lightbox.querySelector('[data-lightbox-img]');
+    const titEl = lightbox.querySelector('[data-lightbox-titulo]');
+    const subEl = lightbox.querySelector('[data-lightbox-sub]');
+    const tagEl = lightbox.querySelector('[data-lightbox-tag]');
+    const contadorEl = lightbox.querySelector('[data-lightbox-contador]');
+
+    const dedoPreview = m.id === '03-filha-unica-ouro' ? 'anelar' : 'medio';
+    const srcImg = m.mao || `${m.pasta}/${dedoPreview}.png`;
+
+    if (imgEl) {
+      imgEl.src = srcImg;
+      imgEl.alt = m.titulo;
+    }
+    if (titEl) titEl.textContent = `${m.num} · ${m.titulo}`;
+    if (subEl) subEl.textContent = m.subtitulo || '';
+    if (tagEl) tagEl.textContent = m.categoriaNome ? `#${m.categoriaNome}` : 'Catálogo Belle';
+    if (contadorEl) contadorEl.textContent = `${indexLightboxAtual + 1} / ${listaFiltradaAtual.length}`;
+  }
+
+  if (lightbox) {
+    lightbox.querySelectorAll('[data-lightbox-fechar]').forEach((b) => b.addEventListener('click', fecharLightbox));
+    const ant = lightbox.querySelector('[data-lightbox-ant]');
+    const prox = lightbox.querySelector('[data-lightbox-prox]');
+    if (ant) ant.addEventListener('click', () => { indexLightboxAtual--; atualizarLightbox(); });
+    if (prox) prox.addEventListener('click', () => { indexLightboxAtual++; atualizarLightbox(); });
+
+    const btnAplicar = lightbox.querySelector('[data-lightbox-aplicar]');
+    if (btnAplicar) {
+      btnAplicar.addEventListener('click', () => {
+        const m = listaFiltradaAtual[indexLightboxAtual];
+        if (m) {
+          aplicarModelo(m);
+          fecharLightbox();
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.hidden) {
+        if (e.key === 'ArrowLeft') { indexLightboxAtual--; atualizarLightbox(); }
+        else if (e.key === 'ArrowRight') { indexLightboxAtual++; atualizarLightbox(); }
+      }
+    });
+  }
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.hidden) fecharModal();
+    if (e.key === 'Escape') {
+      if (lightbox && !lightbox.hidden) { fecharLightbox(); return; }
+      if (!modal.hidden) fecharModal();
+    }
   });
 
   function sincronizarDestinos() {
@@ -383,29 +463,44 @@ export function iniciarModelosSalao({ modal, botaoAbrir, getAlvo, setAlvo, aoApl
       return aba.cats.includes(m.categoria);
     });
 
+    listaFiltradaAtual = filtrados;
+
     filtrados.forEach((m) => {
       const item = document.createElement('div');
       item.className = 'h3d__modal-item';
 
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'h3d__modal-card h3d__modal-card--so-unha';
+      const card = document.createElement('div');
+      card.className = 'h3d__modal-card h3d__modal-card--mao';
       card.dataset.id = m.id;
       card.setAttribute('role', 'radio');
       card.setAttribute('aria-checked', String(m.id === modeloAtivoId));
-      card.title = `${m.num} · ${m.titulo} (${m.categoriaNome})`;
-      card.setAttribute('aria-label', `${m.num} · ${m.titulo}`);
+      card.title = `${m.num} · ${m.titulo} (${m.categoriaNome}) - Toque para aplicar ou no ícone para ver em quadrado cheio`;
 
-      // Exibe apenas a imagem / silhueta da unha
-      if (m.mao) card.className = 'h3d__modal-card h3d__modal-card--mao';   // modelo novo: a mão inteira em quadrado
       const dedoPreview = m.id === '03-filha-unica-ouro' ? 'anelar' : 'medio';
+      const imgSrc = m.mao || `${m.pasta}/${dedoPreview}.png`;
+
       card.innerHTML = `
-        <div class="h3d__unha-figura">
-          <img src="${m.mao || `${m.pasta}/${dedoPreview}.png`}" alt="${m.titulo}" loading="lazy">
+        <div class="h3d__unha-figura" data-aplicar-card>
+          <img src="${imgSrc}" alt="${m.titulo}" loading="lazy">
         </div>
+        <button type="button" class="h3d__modal-card-zoom" data-abrir-quadrado title="Ver foto em quadrado cheio" aria-label="Ver ampliado">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+        </button>
       `;
 
-      card.addEventListener('click', () => aplicarModelo(m));
+      card.addEventListener('click', (e) => {
+        if (!e.target.closest('[data-abrir-quadrado]')) {
+          aplicarModelo(m);
+        }
+      });
+
+      const btnZoom = card.querySelector('[data-abrir-quadrado]');
+      if (btnZoom) {
+        btnZoom.addEventListener('click', (e) => {
+          e.stopPropagation();
+          abrirLightbox(m);
+        });
+      }
 
       const rotulo = document.createElement('span');
       rotulo.className = 'h3d__modal-item-nome';

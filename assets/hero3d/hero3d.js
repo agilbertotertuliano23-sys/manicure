@@ -40,7 +40,7 @@ import { criarFotoUnha } from './foto-unha.js';
 
 import { criarArteIA } from './foto-ia.js';
 
-import { iniciarModelosSalao } from './modelos-salao.js?v=5';
+import { iniciarModelosSalao } from './modelos-salao.js?v=6';
 
 import { criarEnquadre } from './enquadre.js';
 
@@ -653,7 +653,8 @@ function iniciar(raiz) {
 
 
   /* ao abrir o modelo as cinco unhas já vêm com a francesinha rosa (arte-inicial.js) */
-  aplicarArteInicial(editor);
+  /* celular: sem a francesinha de abertura, para a unha da mão mostrar a cor do esmalte escolhido desde o início */
+  if (!matchMedia('(max-width:760px)').matches) aplicarArteInicial(editor);
 
   /* biblioteca de modelos logo abaixo das tonalidades (etapa 1): vai para a mão vista de cima e abre a biblioteca ao lado */
   const botaoLibInicio = $('[data-modelos-inicio]');
@@ -672,11 +673,22 @@ function iniciar(raiz) {
   }
   if (modalModelos && caixaModelos) {
     new MutationObserver(() => {
+      /* celular: ao abrir a biblioteca a seção ocupa a tela toda; leva a página até ela */
+      const abriu = !modalModelos.hidden && !raiz.classList.contains('biblioteca-aberta');
+      if (abriu && matchMedia('(max-width:760px)').matches) raiz.scrollIntoView({ behavior: reduz ? 'auto' : 'smooth', block: 'start' });
       raiz.classList.toggle('biblioteca-aberta', !modalModelos.hidden);
       raiz.classList.toggle('biblioteca-lateral', bibliotecaLateral());
       enquadrar();
     }).observe(modalModelos, { attributes: true, attributeFilter: ['hidden', 'class'] });
     new ResizeObserver(() => { if (bibliotecaLateral()) enquadrar(); }).observe(caixaModelos); // a janela muda de largura ao deslizar
+  }
+
+  /* celular: a imagem em quadrado (lightbox) abre como folha embaixo; a mão é reenquadrada (centro + zoom) na parte livre de cima */
+  const lightboxModelo = $('[data-lightbox-modelo]');
+  const caixaLightbox = lightboxModelo && lightboxModelo.querySelector('.h3d__lightbox-caixa');
+  if (lightboxModelo && caixaLightbox) {
+    new MutationObserver(() => enquadrar()).observe(lightboxModelo, { attributes: true, attributeFilter: ['hidden'] });
+    new ResizeObserver(() => { if (!lightboxModelo.hidden) enquadrar(); }).observe(caixaLightbox);
   }
 
   /* troca de etapa: o painel some, troca e volta */
@@ -689,9 +701,14 @@ function iniciar(raiz) {
 
     modoMao = sim;
 
+    if (mao && sim) mao.visible = true;
+
     if (!sim && editor.sel >= 0) editor.selecionar(-1);
 
-    if (!sim) girar(0); // ao voltar para os frascos a mão volta para a frente
+    if (!sim) {
+      girar(0); // ao voltar para os frascos a mão volta para a frente
+      ajustarZoom(1.0, true);
+    }
 
     recolherCartao(false);
 
@@ -900,6 +917,7 @@ function iniciar(raiz) {
     const y1 = Math.max(y0 + 220, altura - giroEl.offsetHeight - 44);
     const rect = { x0, x1, y0, y1 };
     encMao = ENQ.ajustar({ vista: VISTAS.mao, up: [0, 1, 0], pts: PTS_DEDOS, W: largura, H: altura, fov: cam.fov, rect, fMin: afastamento(VISTAS.mao) });
+    encMao.cx = (x0 + x1) / 2 - largura / 2; encMao.cy = y0 + (y1 - y0) * 0.22 - altura / 2; // o zoom cresce em torno deste ponto (perto das unhas)
     encUnha = { f: 1, dx: (x0 + x1) / 2 - largura / 2, dy: (y0 + y1) / 2 - altura / 2 };
     raiz.style.setProperty('--giro-x', (x0 + x1) / 2 + 'px');
     encLivre = true;
@@ -915,7 +933,12 @@ function iniciar(raiz) {
     if (cam.aspect >= 1) { if (lateral) calcularEnquadreLivre(); return; }
 
     /* celular: com a biblioteca aberta ela vira uma gaveta embaixo (no lugar do cartão); a mão fica na parte de cima */
-    const topoJanela = lateral ? caixaModelos.getBoundingClientRect().top - raiz.getBoundingClientRect().top : cartao.offsetTop;
+    const rr = raiz.getBoundingClientRect();
+    let topoJanela = lateral ? caixaModelos.getBoundingClientRect().top - rr.top : cartao.offsetTop;
+    /* folha do quadrado aberta (ancorada embaixo da tela): usa offsetHeight, que ignora a animação de entrada */
+    if (modoMao && lightboxModelo && !lightboxModelo.hidden && caixaLightbox) {
+      topoJanela = Math.min(topoJanela, innerHeight - caixaLightbox.offsetHeight - rr.top);
+    }
     const folha = Math.max(0, altura - topoJanela); // altura do cartão + a margem de baixo
 
     raiz.style.setProperty('--folha', folha + 'px');
@@ -928,11 +951,14 @@ function iniciar(raiz) {
 
     encMao = ENQ.ajustar({ vista: VISTAS.mao, up: UP_DEDOS, pts: PTS_DEDOS, W: largura, H: altura, fov: cam.fov, rect: rectMao, fMin: 0.45 });
 
+    encMao.cx = (rectMao.x0 + rectMao.x1) / 2 - largura / 2; encMao.cy = rectMao.y0 + (rectMao.y1 - rectMao.y0) * 0.22 - altura / 2; // idem
+
     encUnha = { f: 1.5, dx: 0, dy: (rectMao.y0 + rectMao.y1) / 2 - altura / 2 };
 
-    const rectFr = { x0: lado, x1: largura - lado, y0: infoEl.offsetTop + infoEl.offsetHeight + 16, y1: altura - 58 };
+    const y0Fr = Math.max(infoEl.offsetTop + infoEl.offsetHeight + 18, Math.round(altura * 0.38));
+    const rectFr = { x0: lado, x1: largura - lado, y0: y0Fr, y1: altura - 36 };
 
-    encFrascos = ENQ.ajustar({ vista: VISTAS.frascos, pts: PTS_FRASCOS, W: largura, H: altura, fov: cam.fov, rect: rectFr, fMin: 1 });
+    encFrascos = ENQ.ajustar({ vista: VISTAS.frascos, pts: PTS_FRASCOS, W: largura, H: altura, fov: cam.fov, rect: rectFr, fMin: 0.85 });
 
   }
 
@@ -1092,6 +1118,8 @@ function iniciar(raiz) {
 
     mao.rotation.set(0, 0, 0);
 
+    mao.visible = modoMao;
+
     cena.add(mao);
 
 
@@ -1202,7 +1230,7 @@ function iniciar(raiz) {
 
     cena3d = { cor: definirCor, corFrasco, arte: definirArte };
 
-    window.belleHero = { cena, camera: cam, mao, frascos, frascoAberto: noAberto || null, escolher, irParaMao };
+    window.belleHero = { cena, camera: cam, mao, frascos, frascoAberto: noAberto || null, escolher, irParaMao, ajustarZoom, getZoom: () => zoomAlvo };
 
     definirCor(atual);
 
@@ -1506,7 +1534,69 @@ function iniciar(raiz) {
 
   $('[data-giro-dir]').addEventListener('click', () => girarPelosControles(giro + THREE.MathUtils.degToRad(15)));
 
-  $('[data-giro-zero]').addEventListener('click', () => girarPelosControles(0));
+  $('[data-giro-zero]').addEventListener('click', () => { girarPelosControles(0); ajustarZoom(1.0); });
+
+  /* ---------- zoom lateral da mão (etapa 2) ---------- */
+  let zoomNivel = 1.0;
+  let zoomAlvo = 1.0;
+  const ZOOM_MIN = 0.75;
+  const ZOOM_MAX = 2.6;
+
+  const zoomLateralEl = $('[data-zoom-lateral]');
+  const btnZoomMais = $('[data-zoom-mais]');
+  const btnZoomMenos = $('[data-zoom-menos]');
+  const zoomFaixaEl = $('[data-zoom-faixa]');
+  const zoomValorEl = $('[data-zoom-valor]');
+  const btnZoomReset = $('[data-zoom-reset]');
+
+  function ajustarZoom(novo, instantaneo) {
+    zoomAlvo = THREE.MathUtils.clamp(novo, ZOOM_MIN, ZOOM_MAX);
+    if (instantaneo) zoomNivel = zoomAlvo;
+    const pct = Math.round(zoomAlvo * 100);
+    if (zoomValorEl) zoomValorEl.textContent = `${pct}%`;
+    if (zoomFaixaEl) zoomFaixaEl.value = String(pct);
+  }
+
+  if (btnZoomMais) btnZoomMais.addEventListener('click', () => ajustarZoom(zoomAlvo + 0.25));
+  if (btnZoomMenos) btnZoomMenos.addEventListener('click', () => ajustarZoom(zoomAlvo - 0.25));
+  if (btnZoomReset) btnZoomReset.addEventListener('click', () => ajustarZoom(1.0));
+  if (zoomFaixaEl) {
+    zoomFaixaEl.addEventListener('input', () => ajustarZoom(+zoomFaixaEl.value / 100));
+  }
+
+  // Zoom com a roda do mouse sobre o canvas
+  canvas.addEventListener('wheel', (e) => {
+    if (!modoMao) return;
+    e.preventDefault();
+    const delta = -Math.sign(e.deltaY) * 0.15;
+    ajustarZoom(zoomAlvo + delta);
+  }, { passive: false });
+
+  // Pinch-to-zoom com 2 dedos em dispositivos touch
+  let distPinch0 = 0;
+  let zoomBasePinch = 1.0;
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length === 2 && modoMao) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      distPinch0 = Math.hypot(dx, dy);
+      zoomBasePinch = zoomAlvo;
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length === 2 && modoMao && distPinch0 > 0) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      const ratio = dist / distPinch0;
+      ajustarZoom(zoomBasePinch * ratio);
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('touchend', (e) => {
+    if (e.touches && e.touches.length < 2) distPinch0 = 0;
+  }, { passive: true });
 
 
 
@@ -1655,7 +1745,11 @@ function iniciar(raiz) {
     const enc = naUnha ? encUnha : modoMao ? encMao : encFrascos;
 
     const usaEnc = emPe || (encLivre && modoMao);
-    const fator = usaEnc ? enc.f : naUnha ? 1 : afastamento(vista);
+    const fatorBase = usaEnc ? enc.f : naUnha ? 1 : afastamento(vista);
+
+    // Zoom suave e interativo na mão
+    zoomNivel = THREE.MathUtils.lerp(zoomNivel, zoomAlvo, k(orbitando ? 16 : 4.5));
+    const fator = fatorBase / (modoMao ? zoomNivel : 1.0);
 
     tmpAlvo.set(...vista.alvo);
 
@@ -1695,7 +1789,14 @@ function iniciar(raiz) {
 
     cam.lookAt(camAlvo);
 
-    const alvoX = usaEnc ? enc.dx : 0, alvoY = usaEnc ? enc.dy : 0;
+    let alvoX = usaEnc ? enc.dx : 0, alvoY = usaEnc ? enc.dy : 0;
+
+    /* zoom da mão: a câmera se aproxima do alvo, e a mão sairia do centro do espaço livre. Compensa o deslocamento para que
+       ela cresça em torno do centro desse espaço (dx_z = z·dx + (1−z)·centro) e continue visível ao ampliar */
+    if (usaEnc && modoMao && !naUnha && enc.cx !== undefined) {
+      alvoX = zoomNivel * enc.dx + (1 - zoomNivel) * enc.cx;
+      alvoY = zoomNivel * enc.dy + (1 - zoomNivel) * enc.cy;
+    }
 
     if (Math.abs(alvoX - deslocX) + Math.abs(alvoY - deslocY) > 0.2) {
 
@@ -1768,6 +1869,11 @@ function iniciar(raiz) {
       if (anel && !reduz) anel.rotation.z += dt * 0.4;
 
 
+
+    if (mao) {
+      /* celular (tela em pé): a mão já aparece ao lado dos esmaltes na primeira tela */
+      mao.visible = modoMao || cam.aspect < 1 || (fileira && fileira.position.z > 0.3);
+    }
 
       /* etiqueta HTML "Sua cor" presa à frente do frasco da esquerda */
 

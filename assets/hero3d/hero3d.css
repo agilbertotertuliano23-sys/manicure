@@ -4,7 +4,7 @@
 
   --fundo:#C8155F; --tinta:#FFFFFF; --esmalte:#A8104D;
 
-  position:relative;height:100svh;min-height:680px;max-height:1200px;overflow:hidden;
+  position:relative;height:calc(100svh - 146px);min-height:600px;max-height:1100px;overflow:hidden;
 
   background:var(--fundo);color:var(--tinta);
 
@@ -158,28 +158,84 @@
 
 /* girar a mÃ£o (etapa 2): barra embaixo Ã  esquerda; no celular fica logo acima do cartÃ£o */
 
-.h3d__giro{position:absolute;z-index:10;left:50%;bottom:clamp(1rem,3.5vh,2.2rem);
-  transform:translateX(-50%) translateY(12px);display:flex;align-items:center;gap:.6rem;
-  padding:.5rem 1rem;border-radius:99px;color:var(--tinta);font-family:var(--sans);font-size:11px;
+/* girar a mão (etapa 2): barra elegante centralizada */
+.h3d__giro{position:absolute;z-index:25;left:var(--giro-x, 50%);bottom:clamp(1rem,3.5vh,2.2rem);
+  transform:translateX(-50%) translateY(12px);display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  padding:.45rem .85rem;border-radius:999px;color:var(--tinta);font-family:var(--sans);font-size:11px;
   background:color-mix(in srgb,var(--fundo) 82%,var(--tinta) 18%);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  box-shadow:0 14px 30px -16px rgba(30,0,12,.5),inset 0 0 0 1px color-mix(in srgb,var(--tinta) 22%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 14px 32px -12px rgba(0,0,0,.5),inset 0 0 0 1px color-mix(in srgb,var(--tinta) 24%,transparent);
   opacity:0;visibility:hidden;
-  transition:opacity .35s ease,transform .35s cubic-bezier(.16,1,.3,1),visibility .35s,background-color .9s ease}
+  transition:opacity .35s ease,transform .35s cubic-bezier(.16,1,.3,1),visibility .35s,background-color .9s ease,left .35s ease}
 
 .h3d.modo-mao .h3d__giro{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
 
 .h3d.painel-saindo .h3d__giro{opacity:0;transform:translateX(-50%) translateY(12px)}
 
-.h3d__seta{width:2rem;height:2rem;flex:none;border-radius:50%;border:1px solid color-mix(in srgb,var(--tinta) 45%,transparent);background:transparent;color:var(--tinta);font-size:18px;line-height:1;padding:0 0 .12rem}
+.h3d__seta{width:2.2rem;height:2.2rem;flex:none;border-radius:50%;border:1px solid color-mix(in srgb,var(--tinta) 40%,transparent);background:color-mix(in srgb,var(--tinta) 8%,transparent);color:var(--tinta);font-size:18px;line-height:1;display:grid;place-items:center;cursor:pointer;transition:background-color .2s,color .2s,transform .15s}
 
-.h3d__seta:hover{background:var(--tinta);color:var(--fundo)}
+.h3d__seta:hover{background:var(--tinta);color:var(--fundo);transform:scale(1.06)}
+.h3d__seta:active{transform:scale(0.94)}
 
-.h3d__seta:focus-visible,.h3d__giro input:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+.h3d__seta:focus-visible,.h3d__giro input:focus-visible,.h3d__btn-centralizar:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
 
-.h3d__giro-faixa{display:flex;align-items:center;gap:.5rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:10px}
+.h3d__giro-faixa{display:flex;align-items:center;gap:.45rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:10px}
 
-.h3d__giro-faixa input{width:min(9rem,28vw);accent-color:var(--tinta)}
+.h3d__giro-faixa input{width:min(8.5rem,24vw);height:8px;border-radius:99px;accent-color:var(--tinta);cursor:pointer}
+
+.h3d__btn-centralizar{display:inline-flex;align-items:center;gap:.35rem;padding:.38rem .75rem;border-radius:999px;border:1px solid color-mix(in srgb,var(--tinta) 35%,transparent);background:color-mix(in srgb,var(--tinta) 10%,transparent);color:var(--tinta);font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background-color .2s,color .2s,transform .15s,border-color .2s}
+.h3d__btn-centralizar:hover{background:var(--tinta);color:var(--fundo);border-color:var(--tinta);transform:scale(1.04)}
+.h3d__btn-centralizar:active{transform:scale(0.96)}
+.h3d__btn-centralizar svg{flex:none;transition:transform .3s ease}
+.h3d__btn-centralizar:hover svg{transform:rotate(-45deg)}
+
+/* ---------- controle de zoom lateral da mão (etapa 2) ---------- */
+.h3d__zoom-lateral{
+  position:absolute;z-index:22;
+  left:max(var(--lado),2.2vw);top:50%;
+  transform:translateY(-50%) translateX(-14px);
+  display:flex;flex-direction:column;align-items:center;gap:.45rem;
+  padding:.65rem .45rem;border-radius:999px;
+  background:color-mix(in srgb,var(--fundo) 82%,var(--tinta) 18%);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid color-mix(in srgb,var(--tinta) 24%,transparent);
+  box-shadow:0 16px 36px -12px rgba(0,0,0,.5);
+  color:var(--tinta);font-family:var(--sans);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .35s ease,transform .35s cubic-bezier(.16,1,.3,1),visibility .35s,background-color .9s ease;
+}
+.h3d.modo-mao .h3d__zoom-lateral{
+  opacity:1;visibility:visible;pointer-events:auto;
+  transform:translateY(-50%) translateX(0);
+}
+.h3d.painel-saindo .h3d__zoom-lateral{opacity:0;transform:translateY(-50%) translateX(-14px)}
+.h3d__zoom-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid color-mix(in srgb,var(--tinta) 35%,transparent);
+  background:color-mix(in srgb,var(--tinta) 8%,transparent);
+  color:var(--tinta);display:grid;place-items:center;cursor:pointer;
+  transition:background-color .2s,color .2s,transform .15s;
+}
+.h3d__zoom-btn:hover{background:var(--tinta);color:var(--fundo);transform:scale(1.08)}
+.h3d__zoom-btn:active{transform:scale(0.92)}
+.h3d__zoom-trilho{
+  display:flex;flex-direction:column;align-items:center;gap:.25rem;height:84px;justify-content:center;
+}
+.h3d__zoom-trilho input[type="range"]{
+  -webkit-appearance:slider-vertical;writing-mode:bt-lr;
+  width:8px;height:64px;margin:0;accent-color:var(--tinta);cursor:pointer;
+}
+.h3d__zoom-nivel{
+  font-size:9.5px;font-weight:700;letter-spacing:.04em;line-height:1;opacity:.9;
+}
+.h3d__zoom-reset{
+  padding:.22rem .45rem;border-radius:99px;
+  border:1px solid color-mix(in srgb,var(--tinta) 35%,transparent);
+  background:color-mix(in srgb,var(--tinta) 8%,transparent);
+  color:var(--tinta);font-size:9.5px;font-weight:700;cursor:pointer;
+  transition:background-color .2s,color .2s,transform .15s;
+}
+.h3d__zoom-reset:hover{background:var(--tinta);color:var(--fundo);transform:scale(1.06)}
 
 .h3d.modo-mao .h3d__cena{cursor:grab}
 
@@ -297,7 +353,8 @@
 
 .h3d__modelos{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-bottom:.9rem}
 
-.h3d__modelo{aspect-ratio:384/640;padding:0;border:0;border-radius:99px 99px 38% 38%/32% 32% 18% 18%;overflow:hidden;background:var(--esmalte);box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);transition:transform .2s,box-shadow .2s}
+.h3d__modelo{aspect-ratio:1/1;padding:3px;border-radius:12px;border:1px solid color-mix(in srgb,var(--tinta) 28%,transparent);overflow:hidden;background:color-mix(in srgb,var(--fundo) 90%,#000 10%);box-shadow:0 4px 10px rgba(0,0,0,.25);cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.h3d__modelo img{width:100%;height:100%;display:block;object-fit:contain;border-radius:8px;background:color-mix(in srgb,var(--tinta) 8%,transparent)}
 
 .h3d__modelo img{width:100%;height:100%;display:block;object-fit:cover}
 
@@ -372,73 +429,71 @@
 /* celular: a hero cabe na tela visÃ­vel; a mÃ£o Ã© enquadrada por hero3d.js na parte livre (acima do cartÃ£o) */
 
 @media (max-width:760px){
-
-  .h3d{height:calc(100svh - 123px);min-height:560px} /* 123px = faixa de aviso + menu: a hero cabe inteira na primeira tela */
-
-  .h3d__info{left:var(--lado);right:var(--lado);top:1.2rem;width:auto;text-align:left}
-
-  .h3d__nome{font-size:2.6rem}
-
+  .h3d{height:calc(100svh - 96px);min-height:560px}
+  .h3d__info{
+    left:var(--lado);right:var(--lado);top:0.75rem;width:auto;
+    text-align:center;display:flex;flex-direction:column;align-items:center;
+  }
+  .h3d__marca{font-size:10.5px;letter-spacing:.22em;text-align:center;font-weight:600}
+  .h3d__nome{font-size:clamp(2.1rem,6.8vw,2.7rem);margin:.2rem 0 .3rem;text-align:center}
   .h3d__desc{display:none}
+  .h3d__amostras{gap:.4rem;margin-top:.45rem;justify-content:center;align-items:center}
+  .h3d__amostra{width:32px;height:32px}
+  .h3d__lib-inicio{
+    max-width:270px;margin:.6rem auto 0;padding:.5rem .85rem;
+    font-size:10.5px;justify-content:center;text-align:center;
+  }
+  .h3d__acoes{
+    justify-content:center;gap:.6rem;margin-top:.7rem;width:100%;
+  }
+  .h3d__btn{min-height:44px;padding:.65rem 1.25rem;font-size:11px}
+  .h3d__dica{margin-top:.45rem;font-size:10.5px;text-align:center;opacity:.85}
 
-  .h3d__acoes,.h3d__amostras{justify-content:flex-start}
-
-  .h3d__amostras{gap:.3rem;margin-top:.8rem}
-
-  .h3d__amostra{width:36px;height:36px}
-
-  /* o controlador de cor sÃ³ aparece quando "Sua cor" estÃ¡ escolhida: libera a tela para os frascos */
-
+  /* o controlador de cor só aparece quando "Sua cor" está escolhida */
   .h3d__controle{display:none}
-
   .h3d.na-sua .h3d__controle{display:block}
-
   .h3d.na-sua .h3d__info .h3d__dica{display:none}
 
-  .h3d__btn{min-height:44px}
-
-  .h3d__dica{margin-top:.5rem}
-
-
-
-  /* cartÃ£o = folha na parte de baixo, rola por dentro e recolhe para mostrar a mÃ£o inteira */
-
+  /* cartão = folha na parte de baixo, rola por dentro e recolhe para mostrar a mão inteira */
   .h3d__arte{left:var(--lado);right:var(--lado);width:auto;bottom:.8rem;max-height:46%;overscroll-behavior:contain}
-
-  .h3d__arte .h3d__btn{min-height:44px;padding:.62rem .8rem;letter-spacing:.06em}
+  .h3d__arte .h3d__btn{min-height:42px;padding:.62rem .8rem;letter-spacing:.06em}
 
   .h3d__alca{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;min-height:36px;margin:-.5rem 0 .2rem;padding:0;border:0;background:none;color:var(--tinta);
-
     font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
-
   .h3d__alca::before{content:"";width:2.4rem;height:4px;border-radius:99px;background:color-mix(in srgb,var(--tinta) 45%,transparent)}
 
   .h3d__arte.recolhido > :not(.h3d__alca):not(.h3d__arte-topo):not(.h3d__acoes){display:none}
-
   .h3d__arte.recolhido .h3d__arte-topo{margin-bottom:.2rem}
-
   .h3d__arte.recolhido .h3d__acoes{margin-top:.5rem}
 
   .h3d__unhas button{min-height:38px}
-
   .h3d__seg button{min-height:40px}
-
   .h3d__opc{min-height:38px}
 
+  /* barra de girar logo acima do cartão */
+  .h3d__giro{
+    left:50% !important;right:auto !important;
+    bottom:calc(var(--folha,46%) + .75rem);
+    width:min(calc(100% - 1.8rem), 340px);
+    justify-content:center;border-radius:999px;gap:.35rem;padding:.35rem .6rem;
+    transform:translateX(-50%) translateY(0);
+  }
+  .h3d__seta{width:2.2rem;height:2.2rem;font-size:16px}
+  .h3d__giro-faixa{flex:1;min-width:0;gap:.3rem}
+  .h3d__giro-faixa span.h3d__giro-rotulo{display:none}
+  .h3d__giro-faixa input{width:100%;flex:1;min-width:0}
+  .h3d__btn-centralizar{padding:.35rem .55rem;font-size:10px}
+  .h3d__btn-centralizar span{display:inline}
 
-
-  /* barra de girar logo acima do cartÃ£o (a altura do cartÃ£o vem de --folha, medida por hero3d.js) */
-
-  .h3d__giro{left:var(--lado);right:var(--lado);bottom:calc(var(--folha,46%) + .6rem);justify-content:center;border-radius:18px;gap:.35rem;padding:.35rem .6rem}
-
-  .h3d__seta{width:2.75rem;height:2.75rem}
-
-  .h3d__giro-faixa{flex:1;min-width:0}
-
-  .h3d__giro-faixa input{width:auto;flex:1;min-width:0}
-
-  .h3d__link{flex:none;white-space:nowrap}
-
+  /* zoom lateral no celular */
+  .h3d__zoom-lateral{
+    left:0.65rem;top:38%;transform:translateY(-50%);gap:.35rem;padding:.45rem .3rem;
+  }
+  .h3d__zoom-btn{width:28px;height:28px}
+  .h3d__zoom-trilho{height:60px}
+  .h3d__zoom-trilho input[type="range"]{height:46px}
+  .h3d__zoom-nivel{font-size:8.5px}
+  .h3d__zoom-reset{font-size:8.5px;padding:.15rem .35rem}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -776,7 +831,9 @@
 .h3d__modal-tagbar{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin:.1rem 0 .5rem;font-size:10.5px;font-weight:600}
 .h3d__modal-tagbar[hidden]{display:none}
 .h3d__modal-modelos.lateral .h3d__modal-tag:nth-child(n+3){display:none}
-.h3d__giro{left:var(--giro-x,50%)}
+@media (min-width:761px){
+  .h3d__giro{left:var(--giro-x,50%)}
+}
 /* ate 1100px o cartao da direita se esconde enquanto a biblioteca esta aberta ao lado: a mao ganha a tela toda ao lado dela */
 @media (max-width:1100px){
   .h3d.biblioteca-lateral .h3d__arte{visibility:hidden;opacity:0;pointer-events:none}
@@ -794,4 +851,186 @@
   .h3d__modal-modelos.lateral .h3d__modal-item-nome{max-width:6.4rem}
   .h3d__modal-modelos.lateral .h3d__modal-rodape{display:none}
   .h3d.biblioteca-lateral .h3d__arte{visibility:hidden;opacity:0;pointer-events:none}
+}
+
+/* Botão de zoom em quadrado cheio sobre o card de modelo */
+.h3d__modal-card{position:relative}
+.h3d__modal-card-zoom{
+  position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.45);background:rgba(15,2,8,.65);color:#fff;
+  display:grid;place-items:center;cursor:pointer;z-index:4;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  transition:background-color .2s,color .2s,transform .15s,opacity .2s;
+  opacity:0.85;
+}
+.h3d__modal-card:hover .h3d__modal-card-zoom{
+  opacity:1;transform:scale(1.08);background:var(--tinta);color:var(--fundo);
+}
+
+/* ========================================================
+   MODAL DE QUADRADO CHEIO / LIGHTBOX DO MODELO
+   ======================================================== */
+.h3d__lightbox{
+  position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;
+  padding:clamp(0.8rem,2.5vw,2rem);
+  opacity:1;visibility:visible;
+  transition:opacity .25s ease,visibility .25s ease;
+}
+.h3d__lightbox[hidden]{display:none;opacity:0;visibility:hidden;pointer-events:none}
+.h3d__lightbox-backdrop{
+  position:absolute;inset:0;
+  background:rgba(12,2,7,.82);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.h3d__lightbox-caixa{
+  position:relative;z-index:2;
+  width:min(520px,94vw);max-height:min(90vh,680px);
+  display:flex;flex-direction:column;align-items:center;
+  background:color-mix(in srgb,var(--fundo) 88%,#100207 12%);color:var(--tinta);
+  font-family:var(--sans);border-radius:24px;
+  border:1px solid color-mix(in srgb,var(--tinta) 28%,transparent);
+  box-shadow:0 35px 80px -15px rgba(0,0,0,.8),inset 0 0 0 1px color-mix(in srgb,var(--tinta) 20%,transparent);
+  padding:1.2rem 1.4rem;overflow:hidden;
+  animation:h3d-lightbox-in .3s cubic-bezier(.16,1,.3,1);
+}
+@keyframes h3d-lightbox-in{
+  from{opacity:0;transform:scale(0.92) translateY(12px)}
+  to{opacity:1;transform:none}
+}
+.h3d__lightbox-topo{
+  display:flex;align-items:flex-start;justify-content:space-between;width:100%;gap:1rem;margin-bottom:.4rem;
+}
+.h3d__lightbox-info{flex:1;min-width:0;text-align:left}
+.h3d__lightbox-tag{
+  display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tinta);opacity:.85;margin-bottom:.15rem;
+}
+.h3d__lightbox-titulo{
+  display:block;font-size:16px;font-weight:700;letter-spacing:.03em;
+  color:var(--tinta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.h3d__lightbox-sub{
+  display:block;font-size:11px;opacity:.8;margin-top:.15rem;
+  line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.h3d__lightbox-fechar-btn{
+  width:2.2rem;height:2.2rem;border-radius:50%;
+  border:1px solid color-mix(in srgb,var(--tinta) 32%,transparent);
+  background:color-mix(in srgb,var(--tinta) 10%,transparent);
+  color:var(--tinta);font-size:14px;cursor:pointer;
+  display:grid;place-items:center;flex:none;
+  transition:background-color .2s,color .2s,transform .15s;
+}
+.h3d__lightbox-fechar-btn:hover{background:var(--tinta);color:var(--fundo);transform:scale(1.08)}
+
+/* Moldura de Quadrado Cheio */
+.h3d__lightbox-moldura{
+  position:relative;width:100%;aspect-ratio:1/1;max-height:min(52vh,420px);
+  border-radius:18px;overflow:hidden;background:#f7eeea;
+  box-shadow:0 12px 30px rgba(0,0,0,.45);margin:.7rem 0 .9rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.h3d__lightbox-img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  user-select:none;-webkit-user-drag:none;
+}
+.h3d__lightbox-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:2.6rem;height:2.6rem;border-radius:50%;border:0;
+  background:rgba(20,5,12,.65);color:#fff;font-size:24px;line-height:1;
+  display:grid;place-items:center;cursor:pointer;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  box-shadow:0 6px 16px rgba(0,0,0,.35);
+  transition:background-color .2s,transform .2s;
+}
+.h3d__lightbox-nav:hover{background:var(--tinta);color:var(--fundo);transform:translateY(-50%) scale(1.1)}
+.h3d__lightbox-nav--ant{left:0.6rem}
+.h3d__lightbox-nav--prox{right:0.6rem}
+.h3d__lightbox-contador{
+  position:absolute;bottom:0.6rem;right:0.75rem;
+  background:rgba(15,2,8,.75);color:#fff;
+  padding:.22rem .6rem;border-radius:99px;
+  font-size:10px;font-weight:700;letter-spacing:.05em;
+  backdrop-filter:blur(4px);
+}
+.h3d__lightbox-acoes{
+  display:flex;align-items:center;gap:.65rem;width:100%;justify-content:center;flex-wrap:wrap;
+}
+.h3d__lightbox-btn-aplicar{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 1.4rem;font-size:11.5px;font-weight:700;
+  letter-spacing:.1em;border-radius:999px;
+}
+
+/* ---------- celular: imagem em quadrado numa folha embaixo (a mao fica visivel e centrada em cima) + botoes maiores para o dedo ---------- */
+@media (max-width:760px){
+  /* "centralizar" (⤢) e fechar: alvo de toque de 44 px */
+  .h3d__modal-btn-icone,.h3d__modal-fechar{width:2.75rem;height:2.75rem;font-size:18px}
+  .h3d__modal-topo-acoes{gap:.55rem}
+  /* "ampliar" (lupa no canto do card): sempre visivel (celular nao tem hover) e maior */
+  .h3d__modal-card-zoom{width:36px;height:36px;top:5px;right:5px;opacity:1;background:rgba(15,2,8,.78)}
+  .h3d__modal-card-zoom svg{width:18px;height:18px}
+
+  /* lightbox: folha ancorada embaixo, sem borrar a mao */
+  .h3d__lightbox{align-items:flex-end;padding:0}
+  .h3d__lightbox-backdrop{background:rgba(12,2,7,.28);backdrop-filter:none;-webkit-backdrop-filter:none}
+  .h3d__lightbox-caixa{width:100%;max-height:none;border-radius:22px 22px 0 0;border-width:1px 0 0;
+    padding:.8rem 1rem calc(.9rem + env(safe-area-inset-bottom,0px));
+    animation:h3d-lightbox-sobe .32s cubic-bezier(.16,1,.3,1)}
+  .h3d__lightbox-topo{margin-bottom:.1rem}
+  .h3d__lightbox-titulo{font-size:15px}
+  .h3d__lightbox-fechar-btn{width:2.75rem;height:2.75rem;font-size:17px}
+  /* quadrado: lado = menor entre a largura livre e 34% da altura da tela */
+  .h3d__lightbox-moldura{width:min(100%,34svh);max-height:none;margin:.5rem auto .7rem;border-radius:16px}
+  .h3d__lightbox-nav{width:2.75rem;height:2.75rem}
+  .h3d__lightbox-acoes{gap:.5rem}
+  .h3d__lightbox-btn-aplicar{flex:1 1 100%;justify-content:center;padding:.85rem 1rem}
+  .h3d__lightbox-acoes .h3d__btn:not(.h3d__lightbox-btn-aplicar){flex:1 1 100%;justify-content:center;padding:.7rem 1rem}
+}
+/* celular: gaveta da biblioteca = carrossel de quadrados com a imagem da unha INTEIRA (sem ampliar), arrastado para o lado */
+@media (max-width:760px){
+  .h3d__modal-modelos.lateral .h3d__modal-caixa{max-height:56svh;padding:.6rem .8rem calc(.7rem + env(safe-area-inset-bottom,0px))}
+  .h3d__modal-modelos.lateral .h3d__modal-topo{margin-bottom:.45rem}
+  .h3d__modal-modelos.lateral .h3d__modal-dest-bar{overflow-y:hidden}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos::-webkit-scrollbar{display:none}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos button{flex:none;white-space:nowrap}
+  .h3d__modal-modelos.lateral .h3d__modal-grade{flex:none;gap:.75rem;padding:.35rem .1rem .5rem;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;touch-action:pan-x}
+  .h3d__modal-modelos.lateral .h3d__modal-topo,
+  .h3d__modal-modelos.lateral .h3d__modal-abas,
+  .h3d__modal-modelos.lateral .h3d__modal-dest-bar,
+  .h3d__modal-modelos.lateral .h3d__modal-tagbar{flex:none}
+  .h3d__modal-modelos.lateral .h3d__modal-item{width:min(36vw,8rem);scroll-snap-align:center}
+  .h3d__modal-modelos.lateral .h3d__modal-card--mao{flex:none;width:100%;height:auto;aspect-ratio:1/1}
+  .h3d__modal-modelos.lateral .h3d__modal-card--mao img{object-fit:contain;background:#f7eeea}
+  .h3d__modal-modelos.lateral .h3d__modal-card--mao:hover{transform:none}
+  .h3d__modal-modelos.lateral .h3d__modal-card-zoom,
+  .h3d__modal-modelos.lateral .h3d__modal-tags{display:none}
+  .h3d__modal-modelos.lateral .h3d__modal-item-nome{max-width:100%;margin-top:.35rem}
+}
+/* celular, biblioteca aberta: secao maior (tela inteira abaixo do cabecalho), gaveta compacta e ajustadores organizados */
+@media (max-width:760px){
+  .h3d{scroll-margin-top:86px}
+  .h3d.biblioteca-lateral{height:calc(100svh - 86px);min-height:0}
+
+  .h3d__modal-modelos.lateral .h3d__modal-caixa{max-height:none;padding:.5rem .8rem calc(.55rem + env(safe-area-inset-bottom,0px))}
+  .h3d__modal-modelos.lateral .h3d__modal-topo{margin-bottom:.25rem}
+  .h3d__modal-modelos.lateral .h3d__modal-btn-icone,
+  .h3d__modal-modelos.lateral .h3d__modal-fechar{width:2.5rem;height:2.5rem}
+  .h3d__modal-modelos.lateral .h3d__modal-abas{padding-bottom:.45rem}
+  .h3d__modal-modelos.lateral .h3d__modal-dest-bar{display:flex;align-items:center;gap:.5rem;margin:.35rem 0 0}
+  .h3d__modal-modelos.lateral .h3d__modal-dest-rotulo{flex:none;white-space:nowrap}
+  .h3d__modal-modelos.lateral .h3d__modal-destinos{flex:1;min-width:0}
+  .h3d__modal-modelos.lateral .h3d__modal-grade{padding-top:.3rem;padding-bottom:.35rem;scrollbar-width:thin}
+  .h3d__modal-modelos.lateral .h3d__modal-item-nome{font-size:10px;margin-top:.25rem}
+
+  /* zoom: coluna na lateral direita, centrada no espaco livre da mao (acima da barra de girar), sem cobrir nada */
+  .h3d__zoom-lateral{left:auto;right:.6rem;top:calc((100% - var(--folha,46%) - 3.6rem) / 2);transform:translateY(-50%);
+    gap:.3rem;padding:.4rem .28rem}
+  .h3d.modo-mao .h3d__zoom-lateral{transform:translateY(-50%)}
+  .h3d.painel-saindo .h3d__zoom-lateral{transform:translateY(-50%) translateX(14px)}
+}
+@keyframes h3d-lightbox-sobe{
+  from{opacity:0;transform:translateY(40px)}
+  to{opacity:1;transform:none}
 }

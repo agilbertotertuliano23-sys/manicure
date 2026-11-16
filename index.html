@@ -20,7 +20,7 @@
 
 <link rel="preload" href="assets/3d/esmalte-mao.glb" as="fetch" type="model/gltf-binary" crossorigin>
 
-<link rel="stylesheet" href="assets/hero3d/hero3d.css?v=2">
+<link rel="stylesheet" href="assets/hero3d/hero3d.css?v=33">
 
 <style>
 
@@ -501,12 +501,30 @@
 
       <button class="h3d__seta" type="button" data-giro-esq aria-label="Girar a mão para a esquerda" title="Girar para a esquerda">‹</button>
 
-      <label class="h3d__giro-faixa"><span>Girar</span><input type="range" min="-85" max="85" step="1" value="0" data-giro-faixa aria-label="Girar a mão da esquerda para a direita"></label>
+      <label class="h3d__giro-faixa"><span class="h3d__giro-rotulo">Girar</span><input type="range" min="-85" max="85" step="1" value="0" data-giro-faixa aria-label="Girar a mão da esquerda para a direita"></label>
 
       <button class="h3d__seta" type="button" data-giro-dir aria-label="Girar a mão para a direita" title="Girar para a direita">›</button>
 
-      <button class="h3d__link" type="button" data-giro-zero>centralizar</button>
+      <button class="h3d__btn-centralizar" type="button" data-giro-zero aria-label="Centralizar ângulo da mão" title="Voltar a mão para o centro">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span>Centralizar</span>
+      </button>
 
+    </div>
+
+    <!-- etapa 2: controle de zoom lateral da mão -->
+    <div class="h3d__zoom-lateral" data-zoom-lateral role="group" aria-label="Aproximar ou afastar a mão">
+      <button class="h3d__zoom-btn" type="button" data-zoom-mais aria-label="Aproximar mais a mão (zoom in)" title="Aproximar (+)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="h3d__zoom-trilho">
+        <input type="range" min="75" max="260" step="5" value="100" orient="vertical" data-zoom-faixa aria-label="Nível de zoom da mão">
+        <span class="h3d__zoom-nivel" data-zoom-valor title="Nível de zoom">100%</span>
+      </div>
+      <button class="h3d__zoom-btn" type="button" data-zoom-menos aria-label="Afastar a mão (zoom out)" title="Afastar (−)">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button class="h3d__zoom-reset" type="button" data-zoom-reset aria-label="Zoom padrão 100%" title="Restaurar zoom original">1:1</button>
     </div>
 
     <!-- etapa 2: a mão + detalhe ou desenho na unha -->
@@ -695,6 +713,36 @@
         <div class="h3d__modal-rodape">
           <span class="h3d__modal-status" data-modal-status hidden></span>
           <button type="button" class="h3d__btn h3d__btn--cheio" data-modal-fechar>Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de visualização ampliada do modelo em quadrado cheio na tela -->
+    <div class="h3d__lightbox" data-lightbox-modelo hidden role="dialog" aria-modal="true" aria-label="Visualização do modelo em tamanho grande">
+      <div class="h3d__lightbox-backdrop" data-lightbox-fechar></div>
+      <div class="h3d__lightbox-caixa">
+        <div class="h3d__lightbox-topo">
+          <div class="h3d__lightbox-info">
+            <span class="h3d__lightbox-tag" data-lightbox-tag>Catálogo Belle</span>
+            <strong class="h3d__lightbox-titulo" data-lightbox-titulo>Francesinha Rosa</strong>
+            <span class="h3d__lightbox-sub" data-lightbox-sub>Ponta rosa clara com três pérolas</span>
+          </div>
+          <button type="button" class="h3d__lightbox-fechar-btn" data-lightbox-fechar aria-label="Fechar visualização">✕</button>
+        </div>
+
+        <div class="h3d__lightbox-moldura">
+          <img src="" alt="" data-lightbox-img class="h3d__lightbox-img">
+          <button type="button" class="h3d__lightbox-nav h3d__lightbox-nav--ant" data-lightbox-ant aria-label="Modelo anterior" title="Anterior (←)">‹</button>
+          <button type="button" class="h3d__lightbox-nav h3d__lightbox-nav--prox" data-lightbox-prox aria-label="Próximo modelo" title="Próximo (→)">›</button>
+          <span class="h3d__lightbox-contador" data-lightbox-contador>1 / 110</span>
+        </div>
+
+        <div class="h3d__lightbox-acoes">
+          <button type="button" class="h3d__btn h3d__btn--cheio h3d__lightbox-btn-aplicar" data-lightbox-aplicar>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Aplicar este modelo nas unhas</span>
+          </button>
+          <button type="button" class="h3d__btn" data-lightbox-fechar>Voltar ao catálogo</button>
         </div>
       </div>
     </div>
@@ -1141,7 +1189,7 @@
 
 </script>
 
-<script type="module" src="assets/hero3d/hero3d.js?v=24"></script>
+<script type="module" src="assets/hero3d/hero3d.js?v=36"></script>
 
 </body>
 
