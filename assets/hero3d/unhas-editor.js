@@ -172,6 +172,7 @@ export function criarEditor(cartao, { aoMudar, aoSelecionar }) {
     b.addEventListener('click', async () => {
       try {
         const fonte = await imagemDoModelo(m);
+        if (fonte.dataset) fonte.dataset.nome = m.nome;
         mudar({ acab: 'desenho', fonte, tamanho: 1, semFundo: false, dx: 0, dy: 0, rot: 0 });
       } catch (err) { avisoEl.textContent = err.message; }
     });
@@ -223,6 +224,16 @@ export function criarEditor(cartao, { aoMudar, aoSelecionar }) {
     aplicarFoto,
     posicionar,
     get sel() { return sel; },
+    /* o que cada unha tem, para a mensagem do agendamento */
+    resumo() {
+      return estados.map((e, i) => ({
+        unha: ROTULOS[i],
+        acab: e.acab,
+        arte: e.acab !== 'cor' && e.fonte
+          ? ((e.fonte.dataset && e.fonte.dataset.nome) || (e.fonte.dataset && e.fonte.dataset.foto ? 'copiada de foto' : 'imagem enviada'))
+          : ''
+      }));
+    },
     temArte(i) { return estados[i].acab !== 'cor' && !!estados[i].fonte; }
   };
 }

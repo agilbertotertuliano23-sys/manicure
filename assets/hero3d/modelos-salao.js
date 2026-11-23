@@ -392,6 +392,7 @@ export function iniciarModelosSalao({ modal, botaoAbrir, getAlvo, setAlvo, aoApl
         const dedo = NOMES_DEDOS[alvoAtual];
         const url = `${m.pasta}/${dedo}.${m.ext || 'png'}?v=3`;
         const cv = await renderizarCanvasUnha(url);
+        cv.dataset.nome = m.titulo;
         aoAplicar(cv, alvoAtual);
         avisar(`✓ ${m.titulo} aplicado no ${NOMES_EXIBICAO[alvoAtual]}`);
       } else {
@@ -400,6 +401,7 @@ export function iniciarModelosSalao({ modal, botaoAbrir, getAlvo, setAlvo, aoApl
           const dedo = NOMES_DEDOS[i];
           const url = `${m.pasta}/${dedo}.${m.ext || 'png'}?v=3`;
           const cv = await renderizarCanvasUnha(url);
+          cv.dataset.nome = m.titulo;
           aoAplicar(cv, i);
         }
         avisar(`✓ ${m.titulo} aplicado nas 5 unhas`);

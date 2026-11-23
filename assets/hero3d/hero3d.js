@@ -42,6 +42,8 @@ import { criarArteIA } from './foto-ia.js';
 
 import { iniciarModelosSalao } from './modelos-salao.js?v=6';
 
+import { criarAgendamento } from './agendar-whatsapp.js';
+
 import { criarEnquadre } from './enquadre.js';
 
 import { aplicarArteInicial } from './arte-inicial.js?v=2';
@@ -1944,5 +1946,31 @@ function iniciar(raiz) {
   }
 
   raf = requestAnimationFrame(quadro);
+
+  /* "Agendar": a foto da mão e a configuração escolhida vão para o WhatsApp da profissional (agendar-whatsapp.js) */
+  criarAgendamento({
+    gatilhos: [...raiz.querySelectorAll('[data-agendar]')],
+    capturar() {
+      renderer.render(cena, cam); // o canvas não guarda o quadro: copia no mesmo instante em que desenha
+      const w = canvas.width, h = canvas.height;
+      const escala = Math.min(1, 1400 / Math.max(w, h));
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(w * escala);
+      cv.height = Math.round(h * escala);
+      const g = cv.getContext('2d');
+      g.fillStyle = PALETA[atual].fundo || getComputedStyle(raiz).backgroundColor || '#f4eee8';
+      g.fillRect(0, 0, cv.width, cv.height);
+      g.drawImage(canvas, 0, 0, cv.width, cv.height);
+      return cv;
+    },
+    dados() {
+      const c = PALETA[atual];
+      return {
+        cor: { nome: atual === I_SUA ? 'Sua cor (personalizada)' : c.nome, hex: String(c.esmalte).toUpperCase() },
+        servico: { ...servicos.estado },
+        unhas: editor.resumo()
+      };
+    }
+  });
 
 }

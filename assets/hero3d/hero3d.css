@@ -1049,3 +1049,23 @@
   from{opacity:0;transform:translateY(40px)}
   to{opacity:1;transform:none}
 }
+
+/* Agendar: folha com a imagem do modelo e a mensagem para a profissional (agendar-whatsapp.js) */
+.h3d__agenda{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:1rem}
+.h3d__agenda[hidden]{display:none}
+.h3d__agenda-fundo{position:absolute;inset:0;background:rgba(20,6,12,.62);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.h3d__agenda-folha{position:relative;display:flex;flex-direction:column;gap:.7rem;width:min(26rem,100%);max-height:100%;overflow:auto;padding:1.3rem 1.2rem 1.1rem;border-radius:1rem;background:#fbf6f2;color:#3a0915;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.h3d__agenda-folha .h3d__marca{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.h3d__agenda-tit{font:600 1.35rem/1.15 'Cormorant Garamond',serif}
+.h3d__agenda-x{position:absolute;top:.6rem;right:.7rem;width:2rem;height:2rem;border:0;border-radius:50%;background:transparent;color:inherit;font-size:1rem;cursor:pointer}
+.h3d__agenda-img{display:block;width:100%;max-height:38vh;object-fit:contain;border-radius:.6rem;background:#eadcd3}
+.h3d__agenda-img[hidden]{display:none}
+.h3d__agenda-campo{display:flex;flex-direction:column;gap:.25rem;font-size:.78rem}
+.h3d__agenda-campo input,.h3d__agenda-txt{font:inherit;font-size:.85rem;padding:.55rem .65rem;border:1px solid rgba(58,9,21,.25);border-radius:.5rem;background:#fff;color:#3a0915}
+.h3d__agenda-txt{width:100%;resize:vertical;line-height:1.4;min-height:7rem}
+.h3d__agenda-acoes{display:flex;flex-wrap:wrap;gap:.5rem}
+.h3d__agenda-acoes .h3d__btn{flex:1 1 9rem;color:#3a0915;border-color:#3a0915}
+.h3d__agenda-acoes .h3d__btn--cheio{background:#3a0915;color:#fff}
+.h3d__agenda-acoes .h3d__btn:disabled{opacity:.6;cursor:progress}
+.h3d__agenda-aviso{min-height:1.2em;margin:0;font-size:.8rem;line-height:1.35}
+body.h3d-agenda-aberta{overflow:hidden}
