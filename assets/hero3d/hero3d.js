@@ -42,7 +42,7 @@ import { criarArteIA } from './foto-ia.js';
 
 import { iniciarModelosSalao } from './modelos-salao.js?v=6';
 
-import { criarAgendamento } from './agendar-whatsapp.js';
+import { criarAgendamento } from './agendar-whatsapp.js?v=2';
 
 import { criarEnquadre } from './enquadre.js';
 
