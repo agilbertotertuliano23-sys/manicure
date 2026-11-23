@@ -1951,16 +1951,46 @@ function iniciar(raiz) {
   criarAgendamento({
     gatilhos: [...raiz.querySelectorAll('[data-agendar]')],
     capturar() {
-      renderer.render(cena, cam); // o canvas não guarda o quadro: copia no mesmo instante em que desenha
-      const w = canvas.width, h = canvas.height;
-      const escala = Math.min(1, 1400 / Math.max(w, h));
+      /* a foto é sempre a mão vista de cima, dedos para cima, com a cor e a arte escolhidas (sem frascos nem seleção).
+         O canvas não guarda o quadro: copia no mesmo instante em que desenha e devolve a cena ao estado normal */
+      const W = 900, H = 1200;
+      const guardado = {
+        pos: cam.position.clone(), up: cam.up.clone(), fov: cam.fov, aspect: cam.aspect,
+        sel: uniformsMao.uSelUnha.value, frascos: fileira ? fileira.visible : false,
+        pr: renderer.getPixelRatio()
+      };
       const cv = document.createElement('canvas');
-      cv.width = Math.round(w * escala);
-      cv.height = Math.round(h * escala);
-      const g = cv.getContext('2d');
-      g.fillStyle = PALETA[atual].fundo || getComputedStyle(raiz).backgroundColor || '#f4eee8';
-      g.fillRect(0, 0, cv.width, cv.height);
-      g.drawImage(canvas, 0, 0, cv.width, cv.height);
+      cv.width = W; cv.height = H;
+      try {
+        if (fileira) fileira.visible = false;
+        uniformsMao.uSelUnha.value = -1;
+        renderer.setPixelRatio(1);
+        renderer.setSize(W, H, false);
+        const vista = VISTAS.mao;
+        const enc = ENQ.ajustar({ vista, up: UP_DEDOS, pts: PTS_DEDOS, W, H, fov: 30, rect: { x0: 80, x1: W - 80, y0: 110, y1: H - 110 }, fMin: 0.3 });
+        cam.fov = 30; cam.aspect = W / H;
+        cam.up.set(...UP_DEDOS);
+        tmpAlvo.set(...vista.alvo);
+        cam.position.set(...vista.pos).sub(tmpAlvo).multiplyScalar(enc.f).add(tmpAlvo);
+        cam.lookAt(tmpAlvo);
+        cam.setViewOffset(W, H, -enc.dx, -enc.dy, W, H);
+        cam.updateProjectionMatrix();
+        renderer.render(cena, cam);
+        const g = cv.getContext('2d');
+        g.fillStyle = PALETA[atual].fundo || getComputedStyle(raiz).backgroundColor || '#f4eee8';
+        g.fillRect(0, 0, W, H);
+        g.drawImage(canvas, 0, 0, W, H);
+      } finally {
+        if (fileira) fileira.visible = guardado.frascos;
+        uniformsMao.uSelUnha.value = guardado.sel;
+        renderer.setPixelRatio(guardado.pr);
+        renderer.setSize(largura, altura, false);
+        cam.fov = guardado.fov; cam.aspect = guardado.aspect;
+        cam.up.copy(guardado.up);
+        cam.position.copy(guardado.pos);
+        cam.lookAt(camAlvo);
+        aplicarDesloc(); // volta o deslocamento da tela (ou limpa, se não havia)
+      }
       return cv;
     },
     dados() {

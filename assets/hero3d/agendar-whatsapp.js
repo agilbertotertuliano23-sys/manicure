@@ -15,34 +15,32 @@ const URL_ENVIO = 'enviar-visual.php';
 const TIPO_ACAB = { cor: 'só cor', detalhe: 'detalhe', desenho: 'desenho' };
 const nomeDe = (lista, id) => (lista.find((x) => x.id === id) || { nome: id }).nome;
 
-/* uma linha por grupo de unhas com a mesma decoração */
+/* uma linha por grupo de unhas com a mesma decoração: "Decoração · Anelar · desenho · Francesinha rosa" */
 function linhasDecoracao(unhas) {
-  const rotulo = (u) => (u.acab === 'cor' ? 'só cor' : `${TIPO_ACAB[u.acab] || u.acab}${u.arte ? ' · ' + u.arte : ''}`);
+  const rotulo = (u) => (u.acab === 'cor' ? 'só cor' : [TIPO_ACAB[u.acab] || u.acab, u.arte].filter(Boolean).join(' · '));
   const grupos = new Map();
   unhas.forEach((u) => {
     const r = rotulo(u);
     if (!grupos.has(r)) grupos.set(r, []);
     grupos.get(r).push(u.unha);
   });
-  if (grupos.size === 1) return [`Todas as unhas: ${[...grupos.keys()][0]}`];
-  return [...grupos].map(([r, nomes]) => `${nomes.join(', ')}: ${r}`);
+  if (grupos.size === 1) return [`Decoração · Todas as unhas · ${[...grupos.keys()][0]}`];
+  return [...grupos].map(([r, nomes]) => `Decoração · ${nomes.join(', ')} · ${r}`);
 }
 
-/* linkImagem: endereço da foto já hospedada (vazio quando não deu para enviar) */
+/* mensagem curta: uma informação por linha, separada por "·". linkImagem vazio = sem link (plano B) */
 export function montarMensagem(d, nomeCliente, linkImagem) {
   const s = d.servico;
+  const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
   const linhas = [
-    'Olá! Quero agendar este visual que montei no site da Belle ✨',
-    '',
-    `Cor: ${d.cor.nome} (${d.cor.hex})`,
-    `Serviço: ${nomeDe(SERVICOS, s.servico)}`,
-    `Formato: ${nomeDe(FORMATOS, s.formato)} · Comprimento: ${nomeDe(COMPRIMENTOS, s.comprimento)} · Acabamento: ${s.acabamento}`,
-    'Decoração:',
-    ...linhasDecoracao(d.unhas).map((l) => `• ${l}`)
+    'Olá! Quero agendar este visual ✨',
+    `Cor · ${d.cor.nome} · ${d.cor.hex}`,
+    `Serviço · ${nomeDe(SERVICOS, s.servico)} · ${nomeDe(FORMATOS, s.formato)} · ${nomeDe(COMPRIMENTOS, s.comprimento)} · ${cap(s.acabamento)}`,
+    ...linhasDecoracao(d.unhas)
   ];
-  if (linkImagem) linhas.push('', `Imagem do modelo: ${linkImagem}`);
+  if (linkImagem) linhas.push(`Foto · ${linkImagem}`);
   const nome = (nomeCliente || '').trim();
-  if (nome) linhas.push('', `Meu nome: ${nome}`);
+  if (nome) linhas.push(`Nome · ${nome}`);
   linhas.push('Quais horários você tem?');
   return linhas.join('\n');
 }
@@ -81,7 +79,7 @@ export function criarAgendamento({ gatilhos, capturar, dados }) {
       <strong class="h3d__agenda-tit">Enviar meu visual para a profissional</strong>
       <img class="h3d__agenda-img" alt="Imagem do modelo escolhido na mão 3D" data-ag-img>
       <label class="h3d__agenda-campo">Seu nome (opcional)<input type="text" data-ag-nome autocomplete="name" maxlength="60"></label>
-      <textarea class="h3d__agenda-txt" data-ag-txt rows="9" aria-label="Mensagem que será enviada"></textarea>
+      <textarea class="h3d__agenda-txt" data-ag-txt rows="7" aria-label="Mensagem que será enviada"></textarea>
       <div class="h3d__agenda-acoes">
         <button type="button" class="h3d__btn h3d__btn--cheio" data-ag-enviar>Enviar no WhatsApp</button>
         <button type="button" class="h3d__btn" data-ag-baixar>Baixar imagem</button>
@@ -166,7 +164,7 @@ export function criarAgendamento({ gatilhos, capturar, dados }) {
       if (blob && !linkImagem) linkImagem = await subirImagem(blob);
       const base = editadoAMao ? txt.value : montarMensagem(dadosAtuais, nome.value, '');
       if (linkImagem) {
-        const texto = editadoAMao ? `${base}\n\nImagem do modelo: ${linkImagem}` : montarMensagem(dadosAtuais, nome.value, linkImagem);
+        const texto = editadoAMao ? `${base}\nFoto · ${linkImagem}` : montarMensagem(dadosAtuais, nome.value, linkImagem);
         txt.value = texto;
         abrirConversa(texto, aba);
         aviso.textContent = 'WhatsApp aberto com a configuração e a imagem. É só tocar em enviar.';
